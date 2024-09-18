@@ -75,7 +75,6 @@ body{
 }
 #interface .navigation .search{
     display: flex;
-    justify-content: flex-start;
     align-items: center;
     padding: 10px 14px;
 }
@@ -85,6 +84,7 @@ body{
     border-radius: 5px;
     padding: 8px; /* Increase padding to match the border size */
     margin-right: 10px;
+    flex-grow: 1;
 }
 
 #interface .navigation .search .reset-button {
