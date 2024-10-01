@@ -21,9 +21,9 @@
             return $this->mysqli->insert_id;
         }
 
-        public function deleteTeam($idteam){
+        public function deleteTeam($id){
             $stmt = $this->mysqli->prepare("DELETE FROM team WHERE idteam = ?");
-            $stmt->bind_param("i", $idteam);
+            $stmt->bind_param("i", $id);
             $stmt->execute();
             $result = $stmt->get_result();
             return $stmt->affected_rows;

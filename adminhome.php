@@ -22,7 +22,7 @@
             <li><a href="insertteam.php">Manage Team</a></li>
             <li><a href="insertgame.php">Manage Game</a></li>
             <li><a href="inserteventnew.php">Manage Event</a></li>
-            <li></i><a href="achievement.php">Manage Achievement</a></li>
+            <li></i><a href="insertachievement.php">Manage Achievement</a></li>
             <li><a href="#">Join Proposal</a></li>
         </div>
     </section>
@@ -51,10 +51,10 @@
                 echo "<b>Hasil pencarian : ".$cari."</b>";
             }
 
-            if(isset($_GET['result'])){
-                if($_GET['result'] == 'success'){
+            if(isset($_GET['deleted'])){
+                if($_GET['deleted'] == 'success'){
                     echo "Deleted Succsessfull😆";
-                 } else if($_GET['result'] == 'failed'){
+                 } else if($_GET['deleted'] == 'failed'){
                     echo "Failed to delete data😔🙏";
                  }
              }
@@ -83,7 +83,6 @@
                     </tr>";
             }
             echo "</table>";
-            // $mysqli->close();
         ?>
         </div>
     </section>

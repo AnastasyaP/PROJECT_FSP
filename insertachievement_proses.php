@@ -1,16 +1,23 @@
 <?php
-    include 'koneksi.php';
+    require_once("achievementclass.php");
 
-    if($_POST['btnSubmit']){
+    if(isset($_POST['btnSubmit'])){
         $team = $_POST['team'];
         $name = $_POST['achievement'];
         $date = $_POST['date'];
         $description = $_POST['description'];
 
-        $stmt = $mysqli->prepare("INSERT INTO achievement(idteam, name, date, description) VALUES(?,?,?,?)");
-        $stmt->bind_param("isss", $team, $name, $date, $description);
-        $stmt->execute();
+        $achievement = new Achievement();
 
-        echo "Upload Successfull🎆";
+        $achievementData = [
+            'idteam' => $team,
+            'name' => $name,
+            'date' => $date,
+            'description' => $description
+        ];
+
+        $achievement->insertAchievement($achievementData);
     }
+    header("Location: insertachievement.php?result=success");
+    exit();
 ?>

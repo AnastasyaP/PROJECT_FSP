@@ -4,44 +4,128 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Insert Achievement</title>
+    <link rel ="stylesheet" type="text/css" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
+        crossorigin="anonymous">
+    </script>
 </head>
 <body>
     <?php
-        if(isset($_GET['result'])){
-            if($_GET['result']=='success'){
-                echo "New Achievement Successfully added😆.<br><br><br>";
-            }
-        }
+        require_once("achievementclass.php");
     ?>
+    <section id="menu">
+        <div class="logo">
+            <img src="image/logo.png" alt="">
+            <h2>Grizz Team</h2>
+        </div>
 
-    <form action="insertachievement_proses.php" method="post">
-        <label for="achievement">Name of Achievement: </label>
-        <input type="text" id="achievement" name="achievement"><br><br>
+        <div class ="items">
+            <li><a href="adminhome.php">Dashboard</a></li>
+            <li><a href="insertteam.php">Manage Team</a></li>
+            <li><a href="insertgame.php">Manage Game</a></li>
+            <li><a href="inserteventnew.php">Manage Event</a></li>
+            <li></i><a href="insertachievement.php">Manage Achievement</a></li>
+            <li><a href="#">Join Proposal</a></li>
+        </div>
+    </section>
 
-        <label for="date">Achievement Date: </label>
-        <input type="date" id="date" name="date"><br><br>
+    <section id="interface">
+        <div class="navigation">
+            <div class = "n1">
+                <div class="search">
+                </div>
+            </div>
 
-        <label for="team">Team? </label>
-        <?php
-            include 'koneksi.php';
-            
-            $stmt = $mysqli->prepare("SELECT * FROM team");
-            $stmt->execute();
-            $res = $stmt->get_result();
-        ?>
-        <select name="team" id="team">
-            <option value="">Choose a Team</option>
+            <div class="profile">
+                <i class="bi bi-person-circle"></i>
+            </div>
+        </div>
+        <h3 class="i-name"> Insert Achievement </h3>
+        <div class="tableall">
             <?php
-                while($row = $res->fetch_assoc()){
-                    echo "<option value=".$row['idteam'].">".$row['name']."</option>";
+                if(isset($_GET['result'])){
+                    if($_GET['result']=='success'){
+                        echo "New Achievement Successfully added😆.<br><br><br>";
+                    }
                 }
+
+                if(isset($_GET['deleted'])){
+                    if($_GET['deleted'] == 'success'){
+                        echo "Deleted Succsessfull😆.<br><br><br>";
+                     } else if($_GET['deleted'] == 'failed'){
+                        echo "Failed to delete data😔🙏.<br><br><br>";
+                     }
+                 }
             ?>
-        </select><br><br>
+            <form action="insertachievement_proses.php" method="post">
+                <label for="achievement">Name of Achievement: </label>
+                <input type="text" id="achievement" name="achievement"><br><br>
 
-        <label for="description">Description: </label>
-        <textarea name="description" id="description"></textarea><br><br>
+                <label for="date">Achievement Date: </label>
+                <input type="date" id="date" name="date"><br><br>
 
-        <input type="submit" value="Submit" name="btnSubmit">
-    </form>
+                <label for="team">Team? </label>
+                <?php
+                    include 'koneksi.php';
+                    
+                    $stmt = $mysqli->prepare("SELECT * FROM team");
+                    $stmt->execute();
+                    $res = $stmt->get_result();
+                ?>
+                <select name="team" id="team">
+                    <option value="">Choose a Team</option>
+                    <?php
+                        while($row = $res->fetch_assoc()){
+                            echo "<option value=".$row['idteam'].">".$row['name']."</option>";
+                        }
+                    ?>
+                </select><br><br>
+
+                <label for="description">Description: </label>
+                <textarea name="description" id="description"></textarea><br><br>
+
+                <input type="submit" value="Submit" name="btnSubmit"><br><br>
+            </form>
+            <?php
+                $achievement = new Achievement();
+                $res = $achievement->readAchievement();
+                
+                echo "<table border=1>
+                    <tr>
+                        <th>ID</th>
+                        <th>Team</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th colspan=2>Action</th>
+                    </tr>";
+
+                    while($row = $res->fetch_assoc()){
+                        $formatrilis = strftime("%d %B %Y", strtotime($row['date']));
+
+                        echo "<tr>
+                        <td>".$row['idachievement']."</td>
+                        <td>".$row['teamname']."</td>
+                        <td>".$row['achievename']."</td>
+                        <td>".$formatrilis."</td>
+                        <td>".$row['description']."</td>
+                        <td><a href='editachievement.php?idachievement=".$row['idachievement']."'>Edit</a></td>
+                        <td><a href='deleteachievement.php?idachievement=" . $row['idachievement'] . "' class='remove'>DELETE</a></td>
+                        </tr>";
+                    }
+                echo "</table>";
+            ?>
+        </div>
+    </section>
+    <script>
+        $(document).on("click",".remove",function(e){
+            var confirmDelete = confirm("Are you sure you want to delete this Achievement?");
+        if (!confirmDelete) {
+            e.preventDefault(); // Jika pengguna menekan "Cancel", jangan lakukan apapun
+        }
+        });
+
+    </script>
 </body>
 </html>

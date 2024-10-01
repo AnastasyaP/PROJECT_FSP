@@ -16,8 +16,6 @@
         }
 
         $team->insertTeam($teamData);
-
-        echo "Upload Successfull🎆";
     }
     header("Location: insertteam.php?result=success");
     exit();

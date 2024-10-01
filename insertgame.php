@@ -6,21 +6,22 @@
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
         crossorigin="anonymous">
         </script>
+</head>
         <body>
         <section id="menu">
-        <div class="logo">
-            <img src="image/logo.png" alt="">
-            <h2>Grizz Team</h2>
-        </div>
+            <div class="logo">
+                <img src="image/logo.png" alt="">
+                <h2>Grizz Team</h2>
+            </div>
 
-        <div class ="items">
-            <li><a href="adminhome.php">Dashboard</a></li>
-            <li><a href="insertteam.php">Manage Team</a></li>
-            <li><a href="insertgame.php">Manage Game</a></li>
-            <li><a href="inserteventnew.php">Manage Event</a></li>
-            <li></i><a href="achievement.php">Manage Achievement</a></li>
-            <li><a href="#">Join Proposal</a></li>
-        </div>
+            <div class ="items">
+                <li><a href="adminhome.php">Dashboard</a></li>
+                <li><a href="insertteam.php">Manage Team</a></li>
+                <li><a href="insertgame.php">Manage Game</a></li>
+                <li><a href="inserteventnew.php">Manage Event</a></li>
+                <li></i><a href="insertachievement.php">Manage Achievement</a></li>
+                <li><a href="#">Join Proposal</a></li>
+            </div>
         </section>
 
         <section id="interface">
@@ -34,7 +35,7 @@
                     <i class="bi bi-person-circle"></i>
                 </div>
             </div>
-                <h3 class="i-name"> Insert Game </h3>
+            <h3 class="i-name"> Insert Game </h3>
             <div class="tableall">
                 <?php
 
@@ -103,7 +104,6 @@
                     ?>
             </div>
         </section>
-        </body>
         <script>
         $(document).on("click",".remove",function(e){
             var confirmDelete = confirm("Are you sure you want to delete this game?");
@@ -116,5 +116,5 @@
         //     console.log("jQuery is working!");
         // });
         </script>
-    </head>
+</body>
 </html>

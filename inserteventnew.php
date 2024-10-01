@@ -22,7 +22,7 @@
             <li><a href="insertteam.php">Manage Team</a></li>
             <li><a href="insertgame.php">Manage Game</a></li>
             <li><a href="inserteventnew.php">Manage Event</a></li>
-            <li></i><a href="achievement.php">Manage Achievement</a></li>
+            <li></i><a href="insertachievement.php">Manage Achievement</a></li>
             <li><a href="#">Join Proposal</a></li>
         </div>
     </section>

@@ -8,8 +8,8 @@
     $affected_rows = $team->deleteTeam($id);
 
     if($affected_rows > 0){
-        header("Location: adminhome.php?result=success");
+        header("Location: adminhome.php?deleted=success");
     } else {
-        header("Location: adminhome.php?result=failed");
+        header("Location: adminhome.php?deleted=failed");
     }
 ?>
