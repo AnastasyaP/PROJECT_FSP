@@ -6,38 +6,33 @@
     <title> EDIT TEAM</title>
     <body>
     <?php
+        require_once('gameclass.php');
+    ?>
+    <?php
     if(isset($_POST['btnSubmit'])){
-        include 'koneksi.php';
-            extract($_POST);
 
-            $stmt = $mysqli->prepare("UPDATE game SET name=?, description=? WHERE idgame=?");
-            $stmt->bind_param("ssi",$name,$description,$idgame);
-            $stmt->execute();
-            $jumlah = $stmt->affected_rows;
+        $name = $_POST['name'];
+        $description = $_POST['description'];
+        $idgame = $_POST['idgame'];
 
-            $stmt->close();
-            $mysqli->close();
-            header("Location: insertgame.php?");
-            exit();
+        $game = new Game();
+
+        $gameData =[
+            'name' => $name,
+            'description' =>$description,
+        ];
+
+        $game->updateGame($idgame, $gameData);
+        
+        header("Location: insertgamenew.php");
+        exit();
     }
         
      ?>
         <?php
-                // if(isset($_GET['result'])){
-                //     If($_GET['result']=='success'){
-                //         echo "Update saved successfully😆.<br><br><br>";
-                //     }
-                // }
-                
-                include 'koneksi.php';
-
                 $id = $_GET["idgame"];
-
-                $stmt = $mysqli->prepare("SELECT * from game WHERE idgame = ?");
-                $stmt->bind_param("i",$id);
-                $stmt->execute();
-                $res = $stmt->get_result();
-
+                $game = new Game();
+                $res = $game->readGameById($id);
                 $row = $res->fetch_assoc();
         ?> 
         <form action="editgame.php" method="post">

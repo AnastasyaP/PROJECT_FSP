@@ -40,6 +40,15 @@
             </div>
             <h3 class="i-name"> Insert Game </h3>
             <div class="tableall">
+            <?php
+            if (isset($_GET['status'])) {
+                if ($_GET['status'] == 'success') {
+                    echo "Deleted Successfully 😆";
+                } else if ($_GET['status'] == 'failure') {
+                    echo "Failed to perform operation";
+                }
+            }
+            ?>
                 <?php
 
                     //include 'koneksi.php';
@@ -58,9 +67,10 @@
 
                         $game->insertGame($gameData);
 
+                        header("Location: insertgamenew.php");
+                        exit();
+
                     }
-                    //header("Location: insertgames.php?success=1");
-                    //exit();
                 ?>
                 <form action="insertgamenew.php" method='post'>
                     <label for="name">Game Name : </label>

@@ -1,24 +1,16 @@
 <?php
-    include 'koneksi.php';
+    require_once('gameclass.php');
 
     $id = $_GET['idgame'];
 
-    $stmt = $mysqli->prepare("DELETE FROM game WHERE idgame=?");
-    $stmt->bind_param("i",$id);
-    $stmt->execute();
-    //$res = $stmt->get_result();
+    $game = new Game();
 
-    //$row = $res->fetch_assoc();
+    $affected_rows = $game->deleteGame($id);
 
-    if($stmt->affected_rows > 0){
-        echo "Deleted Succsessfull😆";
+    if($affected_rows > 0){
+        header("Location: insertgamenew.php?status=success");
     } else {
-        echo "Failed to delete data";
+        header("Location: insertgamenew.php?status=failure");
     }
-
-    $stmt->close();
-    $mysqli->close();
-
-    header("Location: insertgame.php");
     exit();
 ?>
