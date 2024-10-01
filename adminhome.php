@@ -8,8 +8,9 @@
 </head>
 <body>
     <?php
-    include 'koneksi.php';
+     require_once('teamclass.php');
     ?>
+    
     <section id="menu">
         <div class="logo">
             <img src="image/logo.png" alt="">
@@ -51,15 +52,9 @@
             }
         ?>
         <?php
-            if(isset($_GET['cari'])){
-                $cari = $_GET['cari'];
-                $stmt = $mysqli->prepare("SELECT t.idteam, t.name as teamname, t.idgame, g.name as gamename FROM team t INNER JOIN game g ON t.idgame = g.idgame WHERE t.name LIKE '%".$cari."%' OR g.name LIKE '%".$cari."%'");
-            }else{
-                $stmt = $mysqli->prepare("SELECT t.idteam, t.name as teamname, t.idgame, g.name as gamename FROM team t INNER JOIN game g ON t.idgame = g.idgame");
-            }
-            $stmt->execute();
-            $res = $stmt->get_result();
-            
+            $team = new Team();
+            $res = $team->readTeam();
+
             echo "<table>";
             echo "<tr>
                     <th>Team ID</th>
@@ -79,7 +74,7 @@
                     </tr>";
             }
             echo "</table>";
-            $mysqli->close();
+            // $mysqli->close();
         ?>
         </div>
     </section>
