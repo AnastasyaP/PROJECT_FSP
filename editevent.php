@@ -7,53 +7,103 @@
 </head>
 <body>
 
-    <?php
-    if(isset($_POST['btnSubmit'])){
-        include 'koneksi.php';
-        extract($_POST);
+<?php
+include 'koneksi.php';
 
-        $stmt = $mysqli->prepare("UPDATE event SET name=?, date =?,description=? WHERE idevent=?");
-        $stmt->bind_param("sssi",$name,$date,$description,$idevent);
-        $stmt->execute();
-        $jumlah = $stmt->affected_rows;
+// Cek apakah form disubmit
+if (isset($_POST['btnSubmit'])) {
+    echo "<pre>";
+    print_r($_POST); // Debug: Tampilkan data yang dikirim dari form
+    echo "</pre>";
 
-        $stmt->close();
-        $mysqli->close();
-        header("Location:  inserteventnew.php");
-        exit();
+    // Ambil data dari POST
+    $name = $_POST['name'];
+    $date = $_POST['date'];
+    $description = $_POST['description'];
+    $teams = $_POST['team'] ?? []; // Pastikan ini tidak null
+    $idevent = $_POST['idevent']; // Ambil idevent dari POST
 
+    // Update data event
+    $stmt = $mysqli->prepare("UPDATE event SET name=?, date=?, description=? WHERE idevent=?");
+    $stmt->bind_param("sssi", $name, $date, $description, $idevent);
+    $stmt->execute();
+
+    if ($stmt->affected_rows > 0) {
+        // Hapus tim terkait event
+        $stmt2 = $mysqli->prepare("DELETE FROM event_teams WHERE idevent=?");
+        $stmt2->bind_param("i", $idevent);
+        $stmt2->execute();
+        $stmt2->close();
+
+        // Masukkan tim yang baru jika ada
+        if (!empty($teams)) {
+            $stmt3 = $mysqli->prepare("INSERT INTO event_teams(idevent, idteam) VALUES(?, ?)");
+            foreach ($teams as $team) {
+                $stmt3->bind_param("ii", $idevent, $team);
+                $stmt3->execute();
+            }
+            $stmt3->close();
         }
-    
-    ?>
+
+        // Arahkan ke halaman baru
+        header("Location: inserteventnew.php");
+        exit();
+    }
+
+    $stmt->close();
+}
+
+// Jika halaman diakses dengan GET, ambil data event
+if (isset($_GET['idevent'])) {
+    $id = $_GET["idevent"];
+    $stmt = $mysqli->prepare("SELECT * FROM event WHERE idevent = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    $row = $res->fetch_assoc();
+
+    // Ambil tim yang sudah terkait dengan event
+    $stmt2 = $mysqli->prepare("SELECT * FROM event_teams WHERE idevent = ?");
+    $stmt2->bind_param("i", $id);
+    $stmt2->execute();
+    $res_team = $stmt2->get_result();
+
+    $selected_teams = [];
+    while ($team = $res_team->fetch_assoc()) {
+        $selected_teams[] = $team['idteam'];
+    }
+
+    $stmt2->close();
+} else {
+    echo "ID event tidak ditemukan.";
+    exit();
+}
+?>
+
+<form action="editevent.php" method="post">
+    <label for="name">Game Event : </label>
+    <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($row["name"]); ?>"><br><br>
+    <label for="date">Event Date :</label>
+    <input type="date" id="date" name="date" value="<?php echo htmlspecialchars($row["date"]); ?>"><br><br>
+    <label for="team">Team :</label><br>
     <?php
+    // Ambil semua tim untuk ditampilkan
+    $stmt3 = $mysqli->prepare("SELECT idteam, name FROM team");
+    $stmt3->execute();
+    $res = $stmt3->get_result();
 
-        // if(isset($_GET['result'])){
-        //     if($_GET['result'] == 'success'){
-        //         echo "New Game Successfully added😆.<br><br><br>";
-        //     }
-        // }
+    while ($team = $res->fetch_assoc()) {
+        $checked = in_array($team['idteam'], $selected_teams) ? "checked" : ""; // Tandai jika sudah dipilih
+        echo "<input type='checkbox' name='team[]' value='" . $team['idteam'] . "' " . $checked . "> " . htmlspecialchars($team['name']) . "<br>";
+    }
+    $stmt3->close();
+    ?><br>
 
-        include 'koneksi.php';
-
-        $id = $_GET["idevent"];
-        
-        include 'koneksi.php';
-
-        $stmt = $mysqli->prepare("SELECT * from event WHERE idevent = ?");
-        $stmt->bind_param("i",$id);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        $row = $res->fetch_assoc();
-    ?>
-    <form action="editevent.php" method ="post">
-        <label for="name">Game Event : </label>
-        <input type="text" id="name" name="name" value="<?php echo $row["name"]?>"><br><br>
-        <label for="date" id="date" name="date">Event Date :</label>
-        <input type="date" id="date" name="date" value="<?php echo $row["date"]?>"><br><br>
-        <label for="description">Description : </label>
-        <textarea name="description" id="description"><?php echo $row['description']?></textarea><br><br>
-        <input type="hidden" name="idevent" value="<?php echo $row["idevent"]; ?>">
-        <input type="submit" value="submit" name="btnSubmit">
-    </form> 
+    <label for="description">Description : </label>
+    <textarea name="description" id="description"><?php $row['description']; ?></textarea><br><br>
+    <input type="hidden" name="idevent" value="<?php e$row['idevent']; ?>">
+    <input type="submit" value="submit" name="btnSubmit">
+</form>
 </body>
 </html>
+

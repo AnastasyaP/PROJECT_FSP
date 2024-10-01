@@ -56,6 +56,7 @@
                     $name = $_POST['name'];
                     $date = $_POST['date'];
                     $description = $_POST['description'];
+                    $teams = $_POST['team'];
             
                     $stmt = $mysqli->prepare("INSERT INTO event(name,date,description) values(?,?,?)");
                     $stmt->bind_param("sss", $name,$date,$description);
@@ -64,6 +65,19 @@
 
                     if($stmt->affected_rows > 0){
                         $last_id = $stmt->insert_id;
+
+                        if(!empty($teams)){
+                            $stmt2 = $mysqli->prepare("INSERT INTO event_teams(idevent,idteam) values(?,?)");
+
+                            foreach($teams as $team){
+                                $stmt2->bind_param("ii",$last_id,$team);
+                                $stmt2->execute();
+
+                            }
+
+                            $stmt2->close();
+                
+                        }
                         header("Location: inserteventnew.php?success=1");
                     }else{
                         echo "Failed to add new event.<br><br>";
@@ -79,6 +93,17 @@
                 <input type="text" id="name" name="name"><br><br>
                 <label for="date" id="date" name="date">Event Date :</label>
                 <input type="date" id="date" name="date"><br><br>
+                <label for="team">Team : </label><br>
+                    <?php
+                        $stmt = $mysqli->prepare("SELECT * FROM team");
+                        $stmt->execute();
+                        $res = $stmt->get_result();
+
+                        while($team = $res->fetch_assoc()){
+                            echo"<input type='checkbox' name='team[]'value='" . $team['idteam'] . "'>" . $team['name'] . "<br>";
+                        }
+                        
+                    ?><br><br>
                 <label for="description">Description : </label>
                 <textarea name="description" id="description"></textarea><br><br>
 
