@@ -1,25 +1,24 @@
 <?php
-    include 'koneksi.php';
+    require_once("teamclass.php");
 
-    if($_POST['btnSubmit']){
+    if(isset($_POST['btnSubmit'])){
         // extract($_POST);
-        $team = $_POST['name'];
+        $teamName = $_POST['name'];
         $games = $_POST['game'];
 
+        $team = new Team();
+
         foreach($games as $game){
-            $stmt = $mysqli->prepare(
-                "INSERT INTO team(idgame, name) VALUES(?,?)"
-            );
-            $stmt->bind_param("is", $game, $team);
-            $stmt->execute();
+            $teamData = [
+                'idgame' => $game,
+                'name' => $teamName
+            ];
         }
 
-        // $jumlah = $stmt->affected_rows;
-        // $last_id = $stmt->insert_id;
+        $team->insertTeam($teamData);
 
         echo "Upload Successfull🎆";
-        $stmt->close();
     }
-    $mysqli->close();
     header("Location: insertteam.php?result=success");
+    exit();
 ?>

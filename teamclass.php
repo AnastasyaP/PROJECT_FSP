@@ -13,5 +13,20 @@
             $result = $stmt->get_result();
             return $result;
         }
+
+        public function insertTeam($arrcol){
+            $stmt = $this->mysqli->prepare("INSERT INTO team(idgame, name) VALUES(?,?)");
+            $stmt->bind_param("is", $arrcol['idgame'], $arrcol['name']);
+            $stmt->execute();
+            return $this->mysqli->insert_id;
+        }
+
+        public function deleteTeam($idteam){
+            $stmt = $this->mysqli->prepare("DELETE FROM team WHERE idteam = ?");
+            $stmt->bind_param("i", $idteam);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            return $stmt->affected_rows;
+        }
     }
 ?>

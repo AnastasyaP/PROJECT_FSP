@@ -1,21 +1,15 @@
 <?php
-    include 'koneksi.php';
+    require_once('teamclass.php');
 
     $id = $_GET['idteam'];
 
-    $stmt = $mysqli->prepare("DELETE FROM team WHERE idteam=?");
-    $stmt->bind_param("i",$id);
-    $stmt->execute();
-    $res = $stmt->get_result();
+    $team = new Team();
 
-    //$row = $res->fetch_assoc();
+    $affected_rows = $team->deleteTeam($id);
 
-    if($stmt->affected_rows > 0){
-        echo "Deleted Succsessfull😆";
+    if($affected_rows > 0){
+        header("Location: adminhome.php?result=success");
     } else {
-        echo "Failed to delete data";
+        header("Location: adminhome.php?result=failed");
     }
-
-    $stmt->close();
-    $mysqli->close();
 ?>

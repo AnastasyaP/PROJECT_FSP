@@ -50,7 +50,16 @@
                 $cari = $_GET['cari'];
                 echo "<b>Hasil pencarian : ".$cari."</b>";
             }
+
+            if(isset($_GET['result'])){
+                if($_GET['result'] == 'success'){
+                    echo "Deleted Succsessfull😆";
+                 } else if($_GET['result'] == 'failed'){
+                    echo "Failed to delete data😔🙏";
+                 }
+             }
         ?>
+        
         <?php
             $team = new Team();
             $res = $team->readTeam();
