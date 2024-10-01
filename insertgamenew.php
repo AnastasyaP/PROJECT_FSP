@@ -8,6 +8,9 @@
         </script>
 </head>
         <body>
+        <?php
+        require_once('gameclass.php');
+        ?>
         <section id="menu">
             <div class="logo">
                 <img src="image/logo.png" alt="">
@@ -17,7 +20,7 @@
             <div class ="items">
                 <li><a href="adminhome.php">Dashboard</a></li>
                 <li><a href="insertteam.php">Manage Team</a></li>
-                <li><a href="insertgame.php">Manage Game</a></li>
+                <li><a href="insertgamenew.php">Manage Game</a></li>
                 <li><a href="inserteventnew.php">Manage Event</a></li>
                 <li></i><a href="insertachievement.php">Manage Achievement</a></li>
                 <li><a href="#">Join Proposal</a></li>
@@ -39,35 +42,27 @@
             <div class="tableall">
                 <?php
 
-                    include 'koneksi.php';
-
-                    // if(isset($_GET['result'])){
-                    //     if($_GET['result'] == 'success'){
-                    //         echo "New Game Successfully added😆.<br><br><br>";
-                    //     }
-                    // }
+                    //include 'koneksi.php';
 
                     if(isset($_POST['btnSubmit'])){
-                        include 'koneksi.php';
+                       //include 'koneksi.php';
                         $name = $_POST['name'];
                         $description = $_POST['description'];
                         
-                        $stmt = $mysqli->prepare("INSERT INTO game(name,description) values(?,?)");
-                        $stmt->bind_param("ss", $name, $description);
-                        $stmt->execute();
+                        $game = new Game();
 
-                        if ($stmt->affected_rows > 0) {
-                            $last_id = $stmt->insert_id;
-                            header("Location: insertgame.php?success=1");
-                            exit();
-                        } else {
-                            echo "Failed to add new game.<br><br><br>";
-                        }
+                        $gameData =[
+                            'name' => $name,
+                            'description' => $description
+                        ];
 
-                        $stmt->close();
+                        $game->insertGame($gameData);
+
                     }
+                    //header("Location: insertgames.php?success=1");
+                    //exit();
                 ?>
-                <form action="insertgame.php" method='post'>
+                <form action="insertgamenew.php" method='post'>
                     <label for="name">Game Name : </label>
                     <input type="text" id="name" name="name"><br><br>
                     <label for="description">Description : </label>
@@ -79,18 +74,16 @@
                     <br>
 
                     <?php
-                        $stmt = $mysqli-> prepare("SELECT * from game");
-                        $stmt->execute();
+                        $game = new Game();
+                        $res = $game->readGame();
 
-                        // Mendapatkan hasil query
-                        $result = $stmt->get_result();
                         echo "<table border = '1'>";
                         echo "<tr>
                             <th>Nama Game</th>
                             <th>Description</th>
                             <th colspan=2>Action</th>
                         </tr>";
-                        while($row = $result->fetch_assoc()){
+                        while($row = $res->fetch_assoc()){
                         echo"<tr>
                             <td>".$row['name']."</td>
                             <td>".$row['description']."</td>
@@ -99,8 +92,6 @@
                         </tr>";
                         }
                         echo"</table>";
-                        $stmt->close();
-                        $mysqli->close();
                     ?>
             </div>
         </section>

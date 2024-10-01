@@ -20,7 +20,7 @@
         <div class ="items">
             <li><a href="adminhome.php">Dashboard</a></li>
             <li><a href="insertteam.php">Manage Team</a></li>
-            <li><a href="insertgame.php">Manage Game</a></li>
+            <li><a href="insertgamenew.php">Manage Game</a></li>
             <li><a href="inserteventnew.php">Manage Event</a></li>
             <li></i><a href="insertachievement.php">Manage Achievement</a></li>
             <li><a href="#">Join Proposal</a></li>
