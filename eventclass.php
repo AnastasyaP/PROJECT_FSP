@@ -38,7 +38,6 @@
             $stmt = $this->mysqli->prepare("DELETE FROM event WHERE idevent=?");
             $stmt->bind_param("i",$id);
             $stmt->execute();
-            $result = $stmt->get_result();
             return $stmt->affected_rows;
         }
 

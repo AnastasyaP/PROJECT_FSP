@@ -43,7 +43,6 @@
             $stmt= $this->mysqli->prepare("DELETE FROM event_teams WHERE idevent=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
-            $res = $stmt->get_result();
             return $stmt->affected_rows;
         }
 

@@ -10,8 +10,8 @@
 
     $affectedevent = $event->deleteEvent($id);
     $affectedeventteam = $eventeam->deleteEvenTeam($id);
-
-    if($affectedevent > 0 && $affectedeventteam > 0  ){
+    
+    if($affectedevent > 0 && $affectedeventteam >= 0  ){
         header("Location: inserteventnew.php?status=success");
         exit();
     } else {
