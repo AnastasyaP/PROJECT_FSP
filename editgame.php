@@ -22,10 +22,14 @@
             'description' =>$description,
         ];
 
-        $game->updateGame($idgame, $gameData);
+        if ($game->updateGame($idgame, $gameData)) {
+            header("Location: insertgamenew.php?status=success");
+            exit();
+        } else {
+            header("Location: insertgamenew.php?status=failure");
+            exit();
+        }
         
-        header("Location: insertgamenew.php");
-        exit();
     }
         
      ?>

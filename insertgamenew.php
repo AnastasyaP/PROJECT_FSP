@@ -43,7 +43,7 @@
             <?php
             if (isset($_GET['status'])) {
                 if ($_GET['status'] == 'success') {
-                    echo "Deleted Successfully 😆";
+                    echo "Do Successfully 😆";
                 } else if ($_GET['status'] == 'failure') {
                     echo "Failed to perform operation";
                 }
@@ -65,10 +65,13 @@
                             'description' => $description
                         ];
 
-                        $game->insertGame($gameData);
-
-                        header("Location: insertgamenew.php");
-                        exit();
+                        if ($game->insertGame($gameData)) {
+                            header("Location: insertgamenew.php?status=success");
+                            exit();
+                        } else {
+                            header("Location: insertgamenew.php?status=failure");
+                            exit();
+                        }
 
                     }
                 ?>

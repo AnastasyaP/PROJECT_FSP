@@ -11,6 +11,10 @@
         crossorigin="anonymous">
     </script>
 <body>
+    <?php
+        require_once('eventclass.php');
+        require_once('event_teamclass.php');
+    ?>
     <section id="menu">
         <div class="logo">
             <img src="image/logo.png" alt="">
@@ -42,51 +46,58 @@
             <h3 class="i-name"> Insert Event </h3>
         
         <div class="tableall">
-            <?php
-            include 'koneksi.php';
 
-                // if(isset($_GET['result'])){
-                //     if($_GET['result'] == 'success'){
-                //         echo "New Game Successfully added😆.<br><br><br>";
-                //     }
-                // }
+            <?php
+            if (isset($_GET['status'])) {
+                if ($_GET['status'] == 'success') {
+                    echo "Do Successfully 😆";
+                } else if ($_GET['status'] == 'failure') {
+                    echo "Failed to perform operation";
+                }
+            }
+            ?>
+            <?php
+
                 if(isset($_POST['btnSubmit'])){
-                    include 'koneksi.php';
                     //extract($_POST);
                     $name = $_POST['name'];
                     $date = $_POST['date'];
                     $description = $_POST['description'];
                     $teams = $_POST['team'];
             
-                    $stmt = $mysqli->prepare("INSERT INTO event(name,date,description) values(?,?,?)");
-                    $stmt->bind_param("sss", $name,$date,$description);
-                    $stmt->execute();
+                   $event = new Event();
 
+                   $eventData = [
+                        'name' => $name,
+                        'date' => $date,
+                        'description' => $description
+                   ];
 
-                    if($stmt->affected_rows > 0){
-                        $last_id = $stmt->insert_id;
+                   $eventID= $event->insertEvent($eventData);
 
-                        if(!empty($teams)){
-                            $stmt2 = $mysqli->prepare("INSERT INTO event_teams(idevent,idteam) values(?,?)");
+                   if($eventID){
+                        $eventeam = new Event_Team();
+                        $temaData = [];
 
-                            foreach($teams as $team){
-                                $stmt2->bind_param("ii",$last_id,$team);
-                                $stmt2->execute();
-
-                            }
-
-                            $stmt2->close();
-                
+                        foreach($teams as $team){
+                            $temaData[] = [
+                                'idevent' => $eventID,
+                                'idteam' => $team
+                            ];
                         }
-                        header("Location: inserteventnew.php?success=1");
-                    }else{
-                        echo "Failed to add new event.<br><br>";
-                    }
-            
-                    $stmt->close();
-                }
-                //$mysqli->close();
 
+                        if ($eventeam->insertEvenTeam($temaData)) {
+                            header("Location: inserteventnew.php?status=success");
+                            exit();
+                        } else {
+                            header("Location: inserteventnew.php?status=failure");
+                            exit();
+                        }
+                    } else {
+                        header("Location: inserteventnew.php?status=failure");
+                        exit();
+                    }
+                }
             ?>
             <form action="inserteventnew.php" method ="post">
                 <label for="name">Game Event : </label>
@@ -94,16 +105,14 @@
                 <label for="date" id="date" name="date">Event Date :</label>
                 <input type="date" id="date" name="date"><br><br>
                 <label for="team">Team : </label><br>
-                    <?php
-                        $stmt = $mysqli->prepare("SELECT * FROM team");
-                        $stmt->execute();
-                        $res = $stmt->get_result();
-
+                <?php
+                    $eventeam = new Event_Team();
+                    $res = $eventeam->readEventTeam();
                         while($team = $res->fetch_assoc()){
                             echo"<input type='checkbox' name='team[]'value='" . $team['idteam'] . "'>" . $team['name'] . "<br>";
                         }
-                        
-                    ?><br><br>
+               
+                ?><br><br>
                 <label for="description">Description : </label>
                 <textarea name="description" id="description"></textarea><br><br>
 
@@ -113,11 +122,9 @@
             <br>
 
             <?php
-                $stmt = $mysqli-> prepare("SELECT * from event");
-                $stmt->execute();
+                $event = new Event();
+                $res = $event->readEvent();
 
-                // Mendapatkan hasil query
-                $result = $stmt->get_result();
                 echo "<table border = '1'>";
                 echo "<tr>
                         <th>Nama event</th>
@@ -125,7 +132,7 @@
                         <th>Description</th>
                         <th colspan=2>Action</th>
                     </tr>";
-                while($row = $result->fetch_assoc()){
+                while($row = $res->fetch_assoc()){
                     echo"<tr>
                         <td>".$row['name']."</td>
                         <td>".$row['date']."</td>
@@ -135,8 +142,6 @@
                     </tr>";
                 }
                 echo"</table>";
-                $stmt->close();
-                $mysqli->close();
             ?>
         </div>
     </section>
@@ -148,10 +153,6 @@
             e.preventDefault(); // Jika pengguna menekan "Cancel", jangan lakukan apapun
         }
         });
-
-        // $(document).ready(function() {
-        //     console.log("jQuery is working!");
-        // });
         </script>
      </body>
     </head>

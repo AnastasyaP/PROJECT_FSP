@@ -1,26 +1,21 @@
 <?php
-    include 'koneksi.php';
+    //include 'koneksi.php';
+    require_once("eventclass.php");
+    require_once("event_teamclass.php");
 
     $id = $_GET['idevent'];
+    
+    $event = new Event();
+    $eventeam = new Event_Team();
 
-    $stmt = $mysqli->prepare("DELETE FROM event WHERE idevent=?");
-    $stmt->bind_param("i",$id);
-    $stmt->execute();
-    $stmt->close();
+    $affectedevent = $event->deleteEvent($id);
+    $affectedeventteam = $eventeam->deleteEvenTeam($id);
 
-    $stmt2 = $mysqli->prepare("DELETE FROM event_teams where idevent=?");
-    $stmt2->bind_param("i",$id);
-    $stmt2->execute();
-
-
-    if($stmt2->affected_rows > 0){
-        echo "Deleted Succsessfull😆";
+    if($affectedevent > 0 && $affectedeventteam > 0  ){
+        header("Location: inserteventnew.php?status=success");
+        exit();
     } else {
-        echo "Failed to delete data";
+        header("Location: inserteventnew.php?status=failure");
+        exit();
     }
-
-    $stmt2->close();
-    $mysqli->close();
-    header("Location: inserteventnew.php");
-    exit();
 ?>
