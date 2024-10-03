@@ -130,13 +130,24 @@
                         <th>Nama event</th>
                         <th>Date </th>
                         <th>Description</th>
+                        <th>Team</th>
                         <th colspan=2>Action</th>
                     </tr>";
                 while($row = $res->fetch_assoc()){
+                    
+                    $team = new Event_Team();
+                    $reseventeam = $team->readEventWithTeam($row['idevent']);
+                    
+                    $team = array();
+                    while($rowteam = $reseventeam->fetch_assoc()){
+                        $team[]=$rowteam['name'];
+                    }
+                    $team = implode(",",$team);
                     echo"<tr>
                         <td>".$row['name']."</td>
                         <td>".$row['date']."</td>
                         <td>".$row['description']."</td>
+                        <td>".$team."</td>
                         <td><a href='editevent.php?idevent=".$row['idevent']."'>EDIT</a></td>
                         <td><a href='deleteevent.php?idevent=". $row['idevent'] . "' class='remove'>DELETE</a></td>
                     </tr>";

@@ -46,6 +46,24 @@
             return $stmt->affected_rows;
         }
 
+        public function readEventWithTeam($idevent){
+            $stmt = $this->mysqli->prepare(
+                "SELECT event_teams.*, team.name
+                FROM event_teams 
+                INNER JOIN team on team.idteam = event_teams.idteam
+                where event_teams.idevent=?");
+
+                // if ($stmt === false) {
+                //     // Tampilkan error jika prepare statement gagal
+                //     die("SQL Error: " . $this->mysqli->error);
+                // }
+
+                $stmt->bind_param("i", $idevent);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                return $result;
+        }
+
         // public function getTeamsByEventId($idevent) {
     
         //     $stmt = $mysqli->prepare("SELECT idteam FROM event_teams WHERE idevent = ?");

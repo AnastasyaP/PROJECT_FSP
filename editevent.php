@@ -8,7 +8,7 @@
 <body>
 
 <?php
-    include 'koneksi.php';
+    //include 'koneksi.php';
     require_once("event_teamclass.php");
     require_once("eventclass.php");
 
