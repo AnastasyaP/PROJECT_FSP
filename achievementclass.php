@@ -29,5 +29,36 @@
             $result = $stmt->get_result();
             return $stmt->affected_rows;
         }
+
+        public function updateAchievement($arrcol, $id){
+        $stmt = $this->mysqli->prepare("UPDATE achievement SET idteam=?, name=?, date=?, description=? WHERE idachievement=?");
+        $stmt->bind_param("ssssi", $arrcol['idteam'], $arrcol['name'], $arrcol['date'], $arrcol['description'], $id);
+        $stmt->execute();
+        return $stmt->affected_rows;
+        }
+
+        public function getAchievement($id){
+            $stmt = $this->mysqli->prepare("SELECT * FROM achievement WHERE idachievement=?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $res = $stmt->get_result();
+            return $res;
+        }
+
+        public function getTeam(){
+            $stmt = $this->mysqli->prepare("SELECT idteam, name FROM team");
+            $stmt->execute();
+
+            $res = $stmt->get_result();
+            return $res;
+        }
+
+        public function getDescription(){
+            $stmt = $this->mysqli->prepare("SELECT idteam, name FROM team");
+            $stmt->execute();
+
+            $res = $stmt->get_result();
+            return $res;
+        }
     }
 ?>

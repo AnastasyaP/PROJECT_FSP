@@ -13,6 +13,7 @@
 <body>
     <?php
         require_once("achievementclass.php");
+        $achievement = new Achievement();
     ?>
     <section id="menu">
         <div class="logo">
@@ -57,8 +58,32 @@
                         echo "Failed to delete data😔🙏.<br><br><br>";
                      }
                  }
+
+                if(isset($_POST['btnSubmit'])){
+                    $team = $_POST['team'];
+                    $name = $_POST['achievement'];
+                    $date = $_POST['date'];
+                    $description = $_POST['description'];
+
+                    $achievement = new Achievement();
+
+                    $achievementData = [
+                        'idteam' => $team,
+                        'name' => $name,
+                        'date' => $date,
+                        'description' => $description
+                    ];
+
+                    if($achievement->insertAchievement($achievementData)){
+                        header("Location: insertachievement.php?result=success");
+                        exit();
+                    } else{
+                        header("Location: insertachievement.php?result=failed");
+                        exit();
+                    }
+                }
             ?>
-            <form action="insertachievement_proses.php" method="post">
+            <form action="insertachievement.php" method="post">
                 <label for="achievement">Name of Achievement: </label>
                 <input type="text" id="achievement" name="achievement"><br><br>
 
@@ -66,17 +91,12 @@
                 <input type="date" id="date" name="date"><br><br>
 
                 <label for="team">Team? </label>
-                <?php
-                    include 'koneksi.php';
-                    
-                    $stmt = $mysqli->prepare("SELECT * FROM team");
-                    $stmt->execute();
-                    $res = $stmt->get_result();
-                ?>
                 <select name="team" id="team">
                     <option value="">Choose a Team</option>
                     <?php
-                        while($row = $res->fetch_assoc()){
+                        $achievementData = $achievement->getTeam();
+                        
+                        while($row = $achievementData->fetch_assoc()){
                             echo "<option value=".$row['idteam'].">".$row['name']."</option>";
                         }
                     ?>
@@ -88,10 +108,10 @@
                 <input type="submit" value="Submit" name="btnSubmit"><br><br>
             </form>
             <?php
-                $achievement = new Achievement();
                 $res = $achievement->readAchievement();
                 
-                echo "<table border=1>
+                if($res->num_rows > 0){
+                    echo "<table border=1>
                     <tr>
                         <th>ID</th>
                         <th>Team</th>
@@ -114,7 +134,8 @@
                         <td><a href='deleteachievement.php?idachievement=" . $row['idachievement'] . "' class='remove'>DELETE</a></td>
                         </tr>";
                     }
-                echo "</table>";
+                    echo "</table>";
+                }
             ?>
         </div>
     </section>

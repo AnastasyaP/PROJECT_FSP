@@ -28,5 +28,28 @@
             $result = $stmt->get_result();
             return $stmt->affected_rows;
         }
+
+        public function updateTeam($arrcol, $id){
+            $stmt = $this->mysqli->prepare("UPDATE team SET idgame = ?, name = ? WHERE idteam = ?");
+            $stmt->bind_param("ssi", $arrcol['idgame'], $arrcol['name'], $id);
+            $stmt->execute();
+            return $stmt->affected_rows;
+        }
+
+        public function getTeam($id){
+            $stmt = $this->mysqli->prepare("SELECT * FROM team WHERE idteam = ?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $res = $stmt->get_result();
+            return $res;
+        }
+
+        public function getGame(){
+            $stmt = $this->mysqli->prepare("SELECT idgame, name FROM game");
+            $stmt->execute();
+            
+            $res = $stmt->get_result();
+            return $res;
+        }
     }
 ?>

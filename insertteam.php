@@ -7,6 +7,10 @@
     <link rel ="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+    <?php
+        require_once('teamclass.php');
+        $team = new Team();
+    ?>
     <section id="menu">
         <div class="logo">
             <img src="image/logo.png" alt="">
@@ -61,14 +65,10 @@
 
             <label for="game">Game?</label><br>
             <?php
-                include 'koneksi.php';
-
-                $stmt = $mysqli->prepare("SELECT * FROM game");
-                $stmt->execute();
-                $res = $stmt->get_result();
+                $gameData = $team->getGame();
 
                 echo "<div id='tab'>";
-                while($row = $res->fetch_assoc()){
+                while($row = $gameData->fetch_assoc()){
                     echo "<input type='radio' id='game' name='game[]' value=".$row['idgame'].">".$row['name']."<br>";
                 }
                 echo "</div>";

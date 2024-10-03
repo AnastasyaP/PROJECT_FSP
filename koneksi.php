@@ -1,11 +1,7 @@
 <?php
-    $mysqli = new mysqli("localhost","root","","esport");
-    if ($mysqli->connect_errno){
+    $mysqli = new mysqli("localhost", "root", "", "esport");
+    if($mysqli->connect_errno){
         echo "Koneksi database gagal: " .$mysqli->connect_error;
         exit();
     }
-
-    // $stmt = $mysqli->prepare("SELECT * FROM movie");
-    // $stmt->execute();
-    // $res = $stmt->get_result();
 ?>
