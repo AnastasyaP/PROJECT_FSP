@@ -9,6 +9,7 @@
 <body>
     <?php
      require_once('teamclass.php');
+     $team = new Team();
     ?>
     
     <section id="menu">
@@ -32,7 +33,7 @@
             <div class = "n1">
             <div class="search">
                 <form action="adminhome.php" method="get">
-                    <input type="text" name ="cari"placeholder="Search">
+                    <input type="text" name ="cari" placeholder="Search">
                     <a href="adminhome.php" class="reset-button">Reset</a>
                 </form>
                 </div>
@@ -46,23 +47,35 @@
         <h3 class="i-name"> DashBoard </h3>
         <div class="tableall">
         <?php 
-            if(isset($_GET['cari'])){
-                $cari = $_GET['cari'];
-                echo "<b>Hasil pencarian : ".$cari."</b>";
-            }
-
             if(isset($_GET['deleted'])){
                 if($_GET['deleted'] == 'success'){
                     echo "Deleted Succsessfull😆";
-                 } else if($_GET['deleted'] == 'failed'){
+                } else if($_GET['deleted'] == 'failed'){
                     echo "Failed to delete data😔🙏";
-                 }
-             }
-        ?>
-        
-        <?php
-            $team = new Team();
-            $res = $team->readTeam();
+                }
+            }
+
+            $totaldata = 0;
+            $perhal = 5;
+            $currhal = 1;
+    
+            if(isset($_GET['offset'])){
+                $offset = intval($_GET['offset']);
+                $currhal = ($offset/5+1);
+            } else{
+                $offset =0;
+            }
+    
+            // search name
+            if(isset($_GET['name'])){
+                $res = $team->readTeam($_GET['name'], $offset, $perhal);
+                $totaldata = $team->getTotalData($_GET['name']);
+            } else{
+                $res = $team->readTeam("", $offset, $perhal);
+                $totaldata = $team->getTotalData("");
+            }
+    
+            $jmlhal = ceil($totaldata/$perhal);
 
             echo "<table>";
             echo "<tr>
@@ -83,7 +96,22 @@
                     </tr>";
             }
             echo "</table>";
-        ?>
+
+            // paging tabel team
+            echo "<div>Total Data ".$totaldata."</div>";
+            echo "<a href='adminhome.php?offset=0'>First</a> ";
+
+            for($i = 1; $i <= $jmlhal; $i++) {
+                $off = ($i-1) * $perhal;
+                if($currhal == $i) {                
+                    echo "<strong style='color:red'>$i</strong>";
+                } else {
+                    echo "<a href='adminhome.php?offset=".$off."'>".$i."</a> ";
+                }
+            }
+            $lastoffset = ($jmlhal - 1) * $perhal;
+            echo "<a href='adminhome.php?offset=".$lastoffset."'>Last</a> ";
+            ?>
         </div>
     </section>
 </body>

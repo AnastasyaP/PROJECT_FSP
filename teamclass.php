@@ -6,12 +6,30 @@
             parent::__construct();
         }
 
-        public function readTeam(){
-            $sql = "SELECT t.idteam, t.name as teamname, t.idgame, g.name as gamename FROM team t INNER JOIN game g ON t.idgame = g.idgame";
+        public function readTeam($keyword_name, $offset=null, $limit=null){
+            $sql = "SELECT t.idteam, t.name as teamname, t.idgame, g.name as gamename FROM team t INNER JOIN game g ON t.idgame = g.idgame WHERE t.name LIKE ?";
+
+            if(!is_null($offset)){
+                $sql.= " LIMIT ?,?";
+            }
+
             $stmt = $this->mysqli->prepare($sql);
+            $keyword = "%{$keyword_name}%";
+
+            if(!is_null($offset)){
+                $stmt->bind_param("sii", $keyword, $offset, $limit);
+            } else{
+                $stmt->bind_param("s", $keyword);
+            }
+
             $stmt->execute();
             $result = $stmt->get_result();
             return $result;
+        }
+
+        public function getTotalData($keyword_name){
+            $res = $this->readTeam($keyword_name);
+            return $res->num_rows;
         }
 
         public function insertTeam($arrcol){

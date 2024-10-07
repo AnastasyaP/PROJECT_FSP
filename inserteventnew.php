@@ -14,6 +14,8 @@
     <?php
         require_once('eventclass.php');
         require_once('event_teamclass.php');
+        $event = new Event();
+        $eventeam = new Event_Team();
     ?>
     <section id="menu">
         <div class="logo">
@@ -59,14 +61,11 @@
             <?php
 
                 if(isset($_POST['btnSubmit'])){
-                    //extract($_POST);
                     $name = $_POST['name'];
                     $date = $_POST['date'];
                     $description = $_POST['description'];
                     $teams = $_POST['team'];
             
-                   $event = new Event();
-
                    $eventData = [
                         'name' => $name,
                         'date' => $date,
@@ -76,7 +75,6 @@
                    $eventID= $event->insertEvent($eventData);
 
                    if($eventID){
-                        $eventeam = new Event_Team();
                         $temaData = [];
 
                         foreach($teams as $team){
@@ -106,7 +104,6 @@
                 <input type="date" id="date" name="date"><br><br>
                 <label for="team">Team : </label><br>
                 <?php
-                    $eventeam = new Event_Team();
                     $res = $eventeam->readEventTeam();
                         while($team = $res->fetch_assoc()){
                             echo"<input type='checkbox' name='team[]'value='" . $team['idteam'] . "'>" . $team['name'] . "<br>";
@@ -122,8 +119,27 @@
             <br>
 
             <?php
-                $event = new Event();
-                $res = $event->readEvent();
+                $totaldata = 0;
+                $perhal = 5;
+                $currhal = 1;
+        
+                if(isset($_GET['offset'])){
+                    $offset = intval($_GET['offset']);
+                    $currhal = ($offset/5+1);
+                } else{
+                    $offset =0;
+                }
+        
+                // search name
+                if(isset($_GET['name'])){
+                    $res = $event->readEvent($_GET['name'], $offset, $perhal);
+                    $totaldata = $event->getTotalData($_GET['name']);
+                } else{
+                    $res = $event->readEvent("", $offset, $perhal);
+                    $totaldata = $event->getTotalData("");
+                }
+        
+                $jmlhal = ceil($totaldata/$perhal);
 
                 echo "<table border = '1'>";
                 echo "<tr>
@@ -135,8 +151,7 @@
                     </tr>";
                 while($row = $res->fetch_assoc()){
                     
-                    $team = new Event_Team();
-                    $reseventeam = $team->readEventWithTeam($row['idevent']);
+                    $reseventeam = $eventeam->readEventWithTeam($row['idevent']);
                     
                     $team = array();
                     while($rowteam = $reseventeam->fetch_assoc()){
@@ -153,6 +168,21 @@
                     </tr>";
                 }
                 echo"</table>";
+
+                // paging tabel team
+                echo "<div>Total Data ".$totaldata."</div>";
+                echo "<a href='inserteventnew.php?offset=0'>First</a> ";
+
+                for($i = 1; $i <= $jmlhal; $i++) {
+                    $off = ($i-1) * $perhal;
+                    if($currhal == $i) {                
+                        echo "<strong style='color:red'>$i</strong>";
+                    } else {
+                        echo "<a href='inserteventnew.php?offset=".$off."'>".$i."</a> ";
+                    }
+                }
+                $lastoffset = ($jmlhal - 1) * $perhal;
+                echo "<a href='inserteventnew.php?offset=".$lastoffset."'>Last</a> ";
             ?>
         </div>
     </section>

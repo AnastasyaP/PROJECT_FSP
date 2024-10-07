@@ -65,8 +65,6 @@
                     $date = $_POST['date'];
                     $description = $_POST['description'];
 
-                    $achievement = new Achievement();
-
                     $achievementData = [
                         'idteam' => $team,
                         'name' => $name,
@@ -108,8 +106,28 @@
                 <input type="submit" value="Submit" name="btnSubmit"><br><br>
             </form>
             <?php
-                $res = $achievement->readAchievement();
-                
+                $totaldata = 0;
+                $perhal = 5;
+                $currhal = 1;
+        
+                if(isset($_GET['offset'])){
+                    $offset = intval($_GET['offset']);
+                    $currhal = ($offset/5+1);
+                } else{
+                    $offset =0;
+                }
+        
+                // search name
+                if(isset($_GET['name'])){
+                    $res = $achievement->readAchievement($_GET['name'], $offset, $perhal);
+                    $totaldata = $achievement->getTotalData($_GET['name']);
+                } else{
+                    $res = $achievement->readAchievement("", $offset, $perhal);
+                    $totaldata = $achievement->getTotalData("");
+                }
+        
+                $jmlhal = ceil($totaldata/$perhal);  
+
                 if($res->num_rows > 0){
                     echo "<table border=1>
                     <tr>
@@ -136,6 +154,20 @@
                     }
                     echo "</table>";
                 }
+                // paging tabel team
+                echo "<div>Total Data ".$totaldata."</div>";
+                echo "<a href='insertachievement.php?offset=0'>First</a> ";
+
+                for($i = 1; $i <= $jmlhal; $i++) {
+                    $off = ($i-1) * $perhal;
+                    if($currhal == $i) {                
+                        echo "<strong style='color:red'>$i</strong>";
+                    } else {
+                        echo "<a href='insertachievement.php?offset=".$off."'>".$i."</a> ";
+                    }
+                }
+                $lastoffset = ($jmlhal - 1) * $perhal;
+                echo "<a href='insertachievement.php?offset=".$lastoffset."'>Last</a> ";
             ?>
         </div>
     </section>

@@ -9,7 +9,8 @@
 </head>
         <body>
         <?php
-        require_once('gameclass.php');
+            require_once('gameclass.php');
+            $game = new Game();
         ?>
         <section id="menu">
             <div class="logo">
@@ -40,72 +41,99 @@
             </div>
             <h3 class="i-name"> Insert Game </h3>
             <div class="tableall">
-            <?php
-            if (isset($_GET['status'])) {
-                if ($_GET['status'] == 'success') {
-                    echo "Do Successfully 😆";
-                } else if ($_GET['status'] == 'failure') {
-                    echo "Failed to perform operation";
-                }
-            }
-            ?>
-                <?php
-
-                    //include 'koneksi.php';
-
-                    if(isset($_POST['btnSubmit'])){
-                       //include 'koneksi.php';
-                        $name = $_POST['name'];
-                        $description = $_POST['description'];
-                        
-                        $game = new Game();
-
-                        $gameData =[
-                            'name' => $name,
-                            'description' => $description
-                        ];
-
-                        if ($game->insertGame($gameData)) {
-                            header("Location: insertgamenew.php?status=success");
-                            exit();
-                        } else {
-                            header("Location: insertgamenew.php?status=failure");
-                            exit();
-                        }
-
+            <?php                
+                if (isset($_GET['status'])) {
+                    if ($_GET['status'] == 'success') {
+                        echo "Do Successfully 😆";
+                    } else if ($_GET['status'] == 'failure') {
+                        echo "Failed to perform operation";
                     }
-                ?>
-                <form action="insertgamenew.php" method='post'>
-                    <label for="name">Game Name : </label>
-                    <input type="text" id="name" name="name"><br><br>
-                    <label for="description">Description : </label>
-                    <textarea name="description" id="description"></textarea><br><br>
+                }
 
-                    <input type="submit" value="Submit" name="btnSubmit">
-                    </form>
+                if(isset($_POST['btnSubmit'])){
+                    $name = $_POST['name'];
+                    $description = $_POST['description'];
+                    
+                    $gameData =[
+                        'name' => $name,
+                        'description' => $description
+                    ];
 
-                    <br>
+                    if ($game->insertGame($gameData)) {
+                        header("Location: insertgamenew.php?status=success");
+                        exit();
+                    } else {
+                        header("Location: insertgamenew.php?status=failure");
+                        exit();
+                    }
 
-                    <?php
-                        $game = new Game();
-                        $res = $game->readGame();
+                }
+            ?>
+            <form action="insertgamenew.php" method='post'>
+                <label for="name">Game Name : </label>
+                <input type="text" id="name" name="name"><br><br>
+                <label for="description">Description : </label>
+                <textarea name="description" id="description"></textarea><br><br>
 
-                        echo "<table border = '1'>";
-                        echo "<tr>
-                            <th>Nama Game</th>
-                            <th>Description</th>
-                            <th colspan=2>Action</th>
-                        </tr>";
-                        while($row = $res->fetch_assoc()){
-                        echo"<tr>
-                            <td>".$row['name']."</td>
-                            <td>".$row['description']."</td>
-                            <td><a href='editgame.php?idgame=".$row['idgame']."'>EDIT</a></td>
-                            <td><a href='deletegame.php?idgame=" . $row['idgame'] . "' class='remove'>DELETE</a></td>
-                        </tr>";
-                        }
-                        echo"</table>";
-                    ?>
+                <input type="submit" value="Submit" name="btnSubmit">
+            </form>
+
+            <br>
+
+            <?php
+                $totaldata = 0;
+                $perhal = 5;
+                $currhal = 1;
+        
+                if(isset($_GET['offset'])){
+                    $offset = intval($_GET['offset']);
+                    $currhal = ($offset/5+1);
+                } else{
+                    $offset =0;
+                }
+        
+                // search name
+                if(isset($_GET['name'])){
+                    $res = $game->readGame($_GET['name'], $offset, $perhal);
+                    $totaldata = $game->getTotalData($_GET['name']);
+                } else{
+                    $res = $game->readGame("", $offset, $perhal);
+                    $totaldata = $game->getTotalData("");
+                }
+        
+                $jmlhal = ceil($totaldata/$perhal);
+
+                echo "<table border = '1'>";
+                echo "<tr>
+                    <th>Nama Game</th>
+                    <th>Description</th>
+                    <th colspan=2>Action</th>
+                </tr>";
+                while($row = $res->fetch_assoc()){
+                echo"<tr>
+                    <td>".$row['name']."</td>
+                    <td>".$row['description']."</td>
+                    <td><a href='editgame.php?idgame=".$row['idgame']."'>EDIT</a></td>
+                    <td><a href='deletegame.php?idgame=" . $row['idgame'] . "' class='remove'>DELETE</a></td>
+                </tr>";
+                }
+                echo"</table>";
+
+                // paging tabel game
+                echo "<div>Total Data ".$totaldata."</div>";
+                echo "<a href='insertgamenew.php?offset=0'>First</a> ";
+
+                for($i = 1; $i <= $jmlhal; $i++) {
+                    $off = ($i-1) * $perhal;
+                    if($currhal == $i) {                
+                        echo "<strong style='color:red'>$i</strong>";
+                    } else {
+                        echo "<a href='insertgamenew.php?offset=".$off."'>".$i."</a> ";
+                    }
+                }
+                $lastoffset = ($jmlhal - 1) * $perhal;
+                echo "<a href='insertgamenew.php?offset=".$lastoffset."'>Last</a> ";
+            ?>
             </div>
         </section>
         <script>

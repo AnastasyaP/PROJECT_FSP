@@ -6,12 +6,30 @@
             parent::__construct();
         }
 
-        public function readGame(){
-            $sql = "SELECT * from game";
+        public function readGame($keyword_name, $offset=null, $limit=null){
+            $sql = "SELECT * from game WHERE name LIKE ?";
+
+            if(!is_null($offset)){
+                $sql.= " LIMIT ?,?";
+            }
+
             $stmt = $this->mysqli->prepare($sql);
+            $keyword = "%{$keyword_name}%";
+
+            if(!is_null($offset)){
+                $stmt->bind_param("sii", $keyword, $offset, $limit);
+            } else{
+                $stmt->bind_param("s", $keyword);
+            }
+
             $stmt->execute();
             $result = $stmt->get_result();
             return $result;
+        }
+
+        public function getTotalData($keyword_name){
+            $res = $this->readGame($keyword_name);
+            return $res->num_rows;
         }
 
         public function readGameById($id){
