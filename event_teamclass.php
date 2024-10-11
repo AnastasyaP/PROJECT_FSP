@@ -11,7 +11,7 @@
             $stmt->execute();
             $res = $stmt->get_result();
             return $res;
-        }
+        }   
 
         public function insertEvenTeam($arrcol){
             if(!empty($arrcol)){
