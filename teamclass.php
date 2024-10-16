@@ -13,8 +13,12 @@
                 $sql.= " LIMIT ?,?";
             }
 
+            //echo "SQL Query: " . $sql;
+
             $stmt = $this->mysqli->prepare($sql);
             $keyword = "%{$keyword_name}%";
+
+            //echo "Keyword: " . $keyword;
 
             if(!is_null($offset)){
                 $stmt->bind_param("sii", $keyword, $offset, $limit);

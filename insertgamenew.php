@@ -24,7 +24,7 @@
                 <li><a href="insertgamenew.php">Manage Game</a></li>
                 <li><a href="inserteventnew.php">Manage Event</a></li>
                 <li></i><a href="insertachievement.php">Manage Achievement</a></li>
-                <li><a href="#">Join Proposal</a></li>
+                <li><a href="joinproposaladmin.php">Join Proposal</a></li>
             </div>
         </section>
 
@@ -32,6 +32,10 @@
             <div class="navigation">
                 <div class = "n1">
                     <div class="search">
+                    <!-- <form action="insertgamenew.php" method="get">
+                    <input type="text" name ="cari" placeholder="Search" value="<?php echo @$_GET["cari"]; ?>">
+                    <a href="insertgamenew.php">Reset</a>  -->
+                </form>
                     </div>
                 </div>
 
@@ -39,7 +43,6 @@
                     <i class="bi bi-person-circle"></i>
                 </div>
             </div>
-            <h3 class="i-name"> Insert Game </h3>
             <div class="tableall">
             <?php                
                 if (isset($_GET['status'])) {
@@ -93,9 +96,9 @@
                 }
         
                 // search name
-                if(isset($_GET['name'])){
-                    $res = $game->readGame($_GET['name'], $offset, $perhal);
-                    $totaldata = $game->getTotalData($_GET['name']);
+                if(isset($_GET['cari'])){
+                    $res = $game->readGame($_GET['cari'], $offset, $perhal);
+                    $totaldata = $game->getTotalData($_GET['cari']);
                 } else{
                     $res = $game->readGame("", $offset, $perhal);
                     $totaldata = $game->getTotalData("");

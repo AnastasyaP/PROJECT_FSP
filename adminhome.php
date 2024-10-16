@@ -24,7 +24,7 @@
             <li><a href="insertgamenew.php">Manage Game</a></li>
             <li><a href="inserteventnew.php">Manage Event</a></li>
             <li></i><a href="insertachievement.php">Manage Achievement</a></li>
-            <li><a href="#">Join Proposal</a></li>
+            <li><a href="joinproposaladmin.php">Join Proposal</a></li>
         </div>
     </section>
 
@@ -33,8 +33,8 @@
             <div class = "n1">
             <div class="search">
                 <form action="adminhome.php" method="get">
-                    <input type="text" name ="cari" placeholder="Search">
-                    <a href="adminhome.php" class="reset-button">Reset</a>
+                    <input type="text" name ="cari" placeholder="Search"  value="<?php echo @$_GET["cari"]; ?>">
+                    <a href="adminhome.php">Reset</a> 
                 </form>
                 </div>
             </div>
@@ -67,9 +67,9 @@
             }
     
             // search name
-            if(isset($_GET['name'])){
-                $res = $team->readTeam($_GET['name'], $offset, $perhal);
-                $totaldata = $team->getTotalData($_GET['name']);
+            if(isset($_GET['cari'])){
+                $res = $team->readTeam($_GET['cari'], $offset, $perhal);
+                $totaldata = $team->getTotalData($_GET['cari']);
             } else{
                 $res = $team->readTeam("", $offset, $perhal);
                 $totaldata = $team->getTotalData("");
@@ -80,16 +80,16 @@
             echo "<table>";
             echo "<tr>
                     <th>Team ID</th>
-                    <th>Game</th>
                     <th>Team Name</th>
+                    <th>Game</th>
                     <th colspan=2>Action</th>
                 </tr>";
 
             while ($row = $res->fetch_assoc()) {
                 echo "<tr>
                         <td>".$row['idteam']."</td>
-                        <td>".$row['gamename']."</td>
                         <td>".$row['teamname']."</td>
+                        <td>".$row['gamename']."</td>
                         <td><a href='editteam.php?idteam=".$row['idteam']."'>EDIT</a></td>
                         <td><a href='deleteteam.php?idteam=" . $row['idteam'] . "'>DELETE</a></td>
 
