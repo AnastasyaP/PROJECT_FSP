@@ -37,7 +37,7 @@
                 <div class="search">
                 <form action="insertachievement.php" method="get">
                     <input type="text" name ="cari" placeholder="Search" value="<?php echo @$_GET["cari"]; ?>">
-                    <a href="insertachievement.php">Reset</a> 
+                    <a class="reset-button" href="insertachievement.php">Reset</a> 
                 </form>
                 </div>
             </div>

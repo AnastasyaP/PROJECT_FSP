@@ -10,6 +10,7 @@
     <?php
         require_once('proposalclass.php');
         $proposal = new Proposal();
+
         if(isset($_POST['action'])){
             $action = $_POST['action'];
             $idjoin = $_POST['idjoin_proposal'];
@@ -55,31 +56,46 @@
         <div class="navigation">
             <div class = "n1">
                 <div class="search">
-                 </div>
-             </div>
+                    <form action="joinproposaladmin.php" method="get">
+                        <input type="text" name ="cari" placeholder="Search"  value="<?php echo @$_GET["cari"]; ?>">
+                        <a class="reset-button" href="joinproposaladmin.php">Reset</a> 
+                    </form>
+                </div>
              <div class="profile">
                  <i class="bi bi-person-circle"></i>
              </div>
+            </div>
         </div>
+
+        <h3 class="i-name"> Join Proposal </h3>
 
         <div class="tableall">
             <?php
 
-                $totaldata =0;
+                $totaldata = 0;
                 $perhal = 5;
                 $currhal = 1;
-
+        
                 if(isset($_GET['offset'])){
                     $offset = intval($_GET['offset']);
                     $currhal = ($offset/5+1);
-                }else{
-                    $offset = 0;
+                } else{
+                    $offset =0;
                 }
-                $resproposal = $proposal->getProposalWaiting();
+
+                // search name
+                if(isset($_GET['cari'])){
+                    $res = $proposal->getProposalWaiting($_GET['cari'], $offset, $perhal);
+                    $totaldata = $proposal->getTotalData($_GET['cari']);
+                } else{
+                    $res = $proposal->getProposalWaiting("", $offset, $perhal);
+                    $totaldata = $proposal->getTotalData("");
+                }
 
                 $jmlhal = ceil($totaldata/$perhal);
 
-                if($resproposal->num_rows > 0){
+                // $resproposal = $proposal->getProposalWaiting();
+                if($res->num_rows > 0){
 
                     echo"<table border = '1'>";
                     echo "<tr>
@@ -91,7 +107,7 @@
                         
                     </tr>";
     
-                        while($row = $resproposal->fetch_assoc()){
+                        while($row = $res->fetch_assoc()){
                         echo"<form method='POST' action ='joinproposaladmin.php'>";
                         echo"<tr>
                             <td>".$row['member_name']."</td>

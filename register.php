@@ -52,16 +52,16 @@
                 ?>
 
                 <label>First Name</label>
-                <input type="text" name="fname" placeholder="FirstName">
+                <input type="text" name="fname" placeholder="FirstName"><br>
 
                 <label>Last Name</label>
-                <input type="text" name="lname" placeholder="LastName">
+                <input type="text" name="lname" placeholder="LastName"><br>
 
                 <label>Username</label>
-                <input type="text" name="username" placeholder="UserName">
+                <input type="text" name="username" placeholder="UserName"><br>
 
                 <label>Password</label>
-                <input type="password" name="password" placeholder="Password">
+                <input type="password" name="password" placeholder="Password"><br>
 
                 <label>Repeat Password</label>
                 <input type="password" name="repassword" placeholder="RepeatPassword">

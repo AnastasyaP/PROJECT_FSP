@@ -31,10 +31,10 @@
         <div class="navigation">
             <div class = "n1">
             <div class="search">
-                <!-- <form action="adminhome.php" method="get">
+                <form action="adminhome.php" method="get">
                     <input type="text" name ="cari"placeholder="Search">
                     <a href="adminhome.php" class="reset-button">Reset</a>
-                </form> -->
+                </form>
                 </div>
             </div>
 

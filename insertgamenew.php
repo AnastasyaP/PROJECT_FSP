@@ -32,10 +32,10 @@
             <div class="navigation">
                 <div class = "n1">
                     <div class="search">
-                    <!-- <form action="insertgamenew.php" method="get">
-                    <input type="text" name ="cari" placeholder="Search" value="<?php echo @$_GET["cari"]; ?>">
-                    <a href="insertgamenew.php">Reset</a>  -->
-                </form>
+                        <form action="insertgamenew.php" method="get">
+                            <input type="text" name ="cari" placeholder="Search" value="<?php echo @$_GET["cari"]; ?>">
+                            <a class="reset-button" href="insertgamenew.php">Reset</a> 
+                        </form>
                     </div>
                 </div>
 
@@ -43,6 +43,8 @@
                     <i class="bi bi-person-circle"></i>
                 </div>
             </div>
+
+            <h3 class="i-name"> Insert Game </h3>
             <div class="tableall">
             <?php                
                 if (isset($_GET['status'])) {

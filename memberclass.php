@@ -9,7 +9,7 @@
         public function checkLogin($arrcol){
             // $status = false;
 
-            $sql = "SELECT idmember, CONCAT(fname,' ', lname) as name FROM member WHERE username = ? and password = ?";    
+            $sql = "SELECT idmember, CONCAT(fname,' ', lname) as name, profile FROM member WHERE username = ? and password = ?";    
             $stmt = $this->mysqli->prepare($sql);
             $stmt->bind_param("ss", $arrcol['username'], $arrcol['password']);
 

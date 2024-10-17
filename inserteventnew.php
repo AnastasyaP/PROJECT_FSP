@@ -39,7 +39,7 @@
                 <div class="search">
                 <form action="inserteventnew.php" method="get">
                     <input type="text" name ="cari" placeholder="Search"  value="<?php echo @$_GET["cari"]; ?>">
-                    <a href="inserteventnew.php">Reset</a> 
+                    <a class="reset-button" href="inserteventnew.php">Reset</a> 
                 </form>
                 </div>
             </div>
@@ -153,7 +153,8 @@
                         <th colspan=2>Action</th>
                     </tr>";
                 while($row = $res->fetch_assoc()){
-                    
+                    $formatrilis = strftime("%d %B %Y", strtotime($row['date']));
+
                     $reseventeam = $eventeam->readEventWithTeam($row['idevent']);
                     
                     $team = array();
@@ -163,7 +164,7 @@
                     $team = implode(",",$team);
                     echo"<tr>
                         <td>".$row['name']."</td>
-                        <td>".$row['date']."</td>
+                        <td>".$formatrilis."</td>
                         <td>".$row['description']."</td>
                         <td>".$team."</td>
                         <td><a href='editevent.php?idevent=".$row['idevent']."'>EDIT</a></td>

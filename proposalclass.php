@@ -6,24 +6,33 @@
             parent::__construct();
         }
 
-        public function getProposalWaiting(){
-            $stmt = $this->mysqli->prepare(
-                "SELECT jp.*, concat(m.fname,' ',m.lname)as member_name,t.name as team_name,m.idmember,t.idteam 
+        public function getProposalWaiting($keyword_name, $offset=null, $limit=null){
+            $sql = "SELECT jp.*, concat(m.fname,' ',m.lname)as member_name,t.name as team_name,m.idmember,t.idteam 
                 from join_proposal as jp inner join member as m on jp.idmember = m.idmember
                 inner join team as t on jp.idteam = t.idteam
-                where jp.status = 'waiting'");
+                where jp.status = 'waiting' LIKE ?";
 
+            if(!is_null($offset)){
+                $sql.= " LIMIT ?,?";
+            }
+
+            $stmt = $this->mysqli->prepare($sql);
+            $keyword = "%{$keyword_name}%";
+
+            if(!is_null($offset)){
+                $stmt->bind_param("sii", $keyword, $offset, $limit);
+            } else{
+                $stmt->bind_param("s", $keyword);
+            }
+            
             $stmt->execute();
             $res = $stmt->get_result();
             return $res;
         }
 
-        public function getTotalData(){
-            $stmt = $this->mysqli->prepare("SELECT COUNT(*) as total from join_proposal where status = waiting");
-            $stmt->execute();
-            $res= $stmt->get_result();
-            $row = $res->fetch_assoc();
-            return $row['total'];
+        public function getTotalData($keyword_name){
+            $res = $this->getProposalWaiting($keyword_name);
+            return $res->num_rows;
         }
 
         public function UpdateStatusApoproved($id){
