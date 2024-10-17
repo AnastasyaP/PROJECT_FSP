@@ -8,19 +8,59 @@
 
         public function getProposalWaiting(){
             $stmt = $this->mysqli->prepare(
-                "SELECT jp.*, concat(m.fname,' ',m.lname)as member_name,t.name as team_name
+                "SELECT jp.*, concat(m.fname,' ',m.lname)as member_name,t.name as team_name,m.idmember,t.idteam 
                 from join_proposal as jp inner join member as m on jp.idmember = m.idmember
                 inner join team as t on jp.idteam = t.idteam
                 where jp.status = 'waiting'");
-    
+
             $stmt->execute();
-
-            // Ambil hasilnya
             $res = $stmt->get_result();
-
-            // Kembalikan hasil
             return $res;
         }
+
+        public function getTotalData(){
+            $stmt = $this->mysqli->prepare("SELECT COUNT(*) as total from join_proposal where status = waiting");
+            $stmt->execute();
+            $res= $stmt->get_result();
+            $row = $res->fetch_assoc();
+            return $row['total'];
+        }
+
+        public function UpdateStatusApoproved($id){
+            $stmt = $this->mysqli->prepare(
+                "UPDATE join_proposal SET status='approved' 
+                where idjoin_proposal=?");
+            $stmt->bind_param("i",$id);
+            $stmt->execute();
+            return $stmt->affected_rows;
+        }
+
+        public function UpdateStatusReject($id){
+            $stmt = $this->mysqli->prepare(
+                "UPDATE join_proposal SET status='rejected'
+                WHERE idjoin_proposal=?");
+            $stmt->bind_param("i",$id);
+            $stmt->execute();    
+            return $stmt->affected_rows; 
+        }
+
+        public function InsertTeamMembers($arrcol) {
+            if (!empty($arrcol)) {
+                $stmt = $this->mysqli->prepare("INSERT INTO team_members(idmember, idteam, description) VALUES (?, ?, ?)");
+            
+                $idmember = $arrcol['idmember'];
+                $idteam = $arrcol['idteam'];
+                $description = $arrcol['description'];
+                
+                $stmt->bind_param("iis", $idmember, $idteam, $description);
+                $stmt->execute();
+                $stmt->close();
+                return true;
+            } else {
+                return false;
+            }
+        }
+
     }
 
 

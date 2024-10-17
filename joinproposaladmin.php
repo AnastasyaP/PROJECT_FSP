@@ -10,8 +10,30 @@
     <?php
         require_once('proposalclass.php');
         $proposal = new Proposal();
+        if(isset($_POST['action'])){
+            $action = $_POST['action'];
+            $idjoin = $_POST['idjoin_proposal'];
+            $idteam = $_POST['idteam'];
+            $idmember = $_POST['idmember'];
+            $description =$_POST['description'];
 
-        $resproposal = $proposal->getProposalWaiting();
+            if($action =='approve'){
+                $proposal->UpdateStatusApoproved($idjoin);
+
+                $proposalData =[
+                    'idteam'=>$idteam,
+                    'idmember'=>$idmember,
+                    'description'=>$description
+                ];
+    
+                $proposal->InsertTeamMembers($proposalData);
+                echo "Proposal approved!";
+            }
+            elseif($action =='reject'){
+                $proposal-> UpdateStatusReject($idjoin);
+                echo "Proposal approved!";
+            }
+        }
     ?>
     <section id="menu">
         <div class="logo">
@@ -42,31 +64,66 @@
 
         <div class="tableall">
             <?php
-                echo"<table border = '1'>";
-                echo "<tr>
-                    <th>Nama Member</th>
-                    <th>Nama Team</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>";
 
-                    while($row = $resproposal->fetch_assoc()){
-                    echo"<tr>
-                        <td>".$row['member_name']."</td>
-                        <td>".$row['team_name']."</td>
-                        <td>".$row['description']."</td>
-                        <td>".$row['status']."</td>
-                        <td>
-                         <form method='POST'>
-                            <input type='hidden' name='idjoin_proposal' value='" . $row['idjoin_proposal'] . "'>
-                            <button type='submit' name='action' value='approve' id=btnprop>Approve</button>
-                            <button type='submit' name='action' value='reject' id=btnprop>Reject</button>
-                        </form>
-                        </td>
-                        </tr>" ;
+                $totaldata =0;
+                $perhal = 5;
+                $currhal = 1;
+
+                if(isset($_GET['offset'])){
+                    $offset = intval($_GET['offset']);
+                    $currhal = ($offset/5+1);
+                }else{
+                    $offset = 0;
+                }
+                $resproposal = $proposal->getProposalWaiting();
+
+                $jmlhal = ceil($totaldata/$perhal);
+
+                if($resproposal->num_rows > 0){
+
+                    echo"<table border = '1'>";
+                    echo "<tr>
+                        <th>Nama Member</th>
+                        <th>Nama Team</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                        
+                    </tr>";
+    
+                        while($row = $resproposal->fetch_assoc()){
+                        echo"<form method='POST' action ='joinproposaladmin.php'>";
+                        echo"<tr>
+                            <td>".$row['member_name']."</td>
+                            <td>".$row['team_name']."</td>
+                            <td>".$row['description']."</td>
+                            <td>".$row['status']."</td>
+                            <td>
+                                <input type='hidden' name='idjoin_proposal' value='" . $row['idjoin_proposal'] . "'>
+                                <input type='hidden' name='idmember' value='" . $row['idmember'] . "'>
+                                <input type='hidden' name='idteam' value='" . $row['idteam'] . "'>
+                                <input type='hidden' name='description' value='" . $row['description'] . "'>
+                                <button type='submit' name='action' value='approve' id=btnprop>Approve</button>
+                                <button type='submit' name='action' value='reject' id=btnprop>Reject</button>
+                            </td>
+                            </tr>" ;
+                        }
+                    echo"</table>";
+                    "</form>";
+                }
+                echo "<div>Total Data ".$totaldata."</div>";
+                echo "<a href='joinproposaladmin.php?offset=0'>First</a> ";
+
+                for($i = 1; $i <= $jmlhal; $i++) {
+                    $off = ($i-1) * $perhal;
+                    if($currhal == $i) {                
+                        echo "<strong style='color:red'>$i</strong>";
+                    } else {
+                        echo "<a href='joinproposaladmin.php?offset=".$off."'>".$i."</a> ";
                     }
-                echo"</table>";
+                }
+                $lastoffset = ($jmlhal - 1) * $perhal;
+                echo "<a href='joinproposaladmin.php?offset=".$lastoffset."'>Last</a> ";
             ?>
         </div>
     </section>
