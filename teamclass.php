@@ -73,5 +73,16 @@
             $res = $stmt->get_result();
             return $res;
         }
+
+        public function getTeamById($idmember){
+            $stmt = $this->mysqli->prepare("SELECT t.name as teamname,g.name as gamename from member as m inner join team_members tm 
+                                   on m.idmember = tm.idmember inner join team t on tm.idteam = t.idteam
+                                   inner join game as g on t.idgame = g.idgame
+                                   where tm.idmember = ?");
+            $stmt->bind_param("i",$idmember);
+            $stmt->execute();
+            $res= $stmt->get_result();
+            return $res;
+        }
     }
 ?>
