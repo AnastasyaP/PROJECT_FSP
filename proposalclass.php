@@ -61,7 +61,39 @@
             }
         }
 
+        public function getTeam(){
+            $stmt = $this->mysqli->prepare("SELECT idteam, name FROM team");
+            $stmt->execute();
+
+            $res = $stmt->get_result();
+            return $res;
+        }
+
+        public function insertJoinProposal($arrcol){
+            $stmt = $this->mysqli->prepare("INSERT INTO join_proposal(idmember,idteam,description,status) value(?,?,?,'waiting')");
+            $stmt->bind_param("iis",$arrcol['idmember'], $arrcol['idteam'], $arrcol['description']);
+            if($stmt->execute()){
+                return true;
+            }else{
+                echo"Error: ". $stmt->error;
+                return false;
+            }
+            
+        }
+
+        public function getProposalbymember($idmember){
+            $stmt = $this->mysqli->prepare(
+                "SELECT jp.*, concat(m.fname,' ',m.lname)as member_name,t.name as team_name,m.idmember,t.idteam 
+                from join_proposal as jp inner join member as m on jp.idmember = m.idmember
+                inner join team as t on jp.idteam = t.idteam
+                where jp.status = 'waiting' and m.idmember=?");
+
+            $stmt->bind_param("i",$idmember);
+
+            $stmt->execute();
+            $res = $stmt->get_result();
+            return $res;
+        }
+
     }
-
-
 ?>

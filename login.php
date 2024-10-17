@@ -8,6 +8,7 @@
 </head>
 <body>
     <?php
+        session_start();
         require_once("memberclass.php");
 
         $member = new Member();
@@ -30,8 +31,9 @@
                 $res = $member->checkLogin($memberData);
                 if($res->num_rows == 1){
                     if($row = $res->fetch_assoc()){
-                        header("Location: memberhome.php?idmember=".$row['idmember']."login=success");
-
+                        $_SESSION['idmember'] = $row['idmember'];
+                       // header("Location: memberhome.php?idmember=".$row['idmember']."login=success");
+                        header("Location: proposalmember.php");
                         exit();
                     }
                 } else{
