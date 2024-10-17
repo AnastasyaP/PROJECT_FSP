@@ -240,3 +240,27 @@ form #tab{
     font-size: 14px; 
     border-radius: 5px;
 }
+
+form #regis{
+    font-size: small;
+    float: left;
+    display: flex;
+}
+
+form .error{
+    background: #F2DEDE;
+    color: #A94442;
+    padding: 10px;
+    width: 95%;
+    border-radius: 5px;
+    margin: 20px auto;
+}
+
+form .success{
+    background: #dee3f2;
+    color: #4257a9;
+    padding: 10px;
+    width: 95%;
+    border-radius: 5px;
+    margin: 20px auto;
+}

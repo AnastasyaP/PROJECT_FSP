@@ -7,7 +7,9 @@
         }
 
         public function checkLogin($arrcol){
-            $sql = "SELECT CONCAT(fname,' ', lname) as name FROM member WHERE username = ? and password = ?";    
+            // $status = false;
+
+            $sql = "SELECT idmember, CONCAT(fname,' ', lname) as name FROM member WHERE username = ? and password = ?";    
             $stmt = $this->mysqli->prepare($sql);
             $stmt->bind_param("ss", $arrcol['username'], $arrcol['password']);
 
@@ -16,7 +18,7 @@
             return $res;
         }
 
-        public function insertMember($arrcol){
+        public function register($arrcol){
             $stmt = $this->mysqli->prepare("INSERT INTO member(fname,lname,username,password,profile) values(?,?,?,?,?)");
             $stmt->bind_param("sssss", $arrcol['fname'], $arrcol['lname'], $arrcol['username'], $arrcol['password'], $arrcol['profile']);
             $stmt->execute();

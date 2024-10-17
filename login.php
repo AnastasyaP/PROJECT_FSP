@@ -7,40 +7,68 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-        <?php
-            if(isset($_POST['username']) && isset($_POST['password'])){
-                function validate($data){
-                    $data = trim($data);
-                    $data = stripsplashes($data);
-                    $data = htmlspecialchars($data);
-                    return $data;
-                }
+    <?php
+        require_once("memberclass.php");
 
-                $usn = validate($_POST['username']);
-                $pwd = validate($_POST['password']);
+        $member = new Member();
 
-                if(empty($usn)){
+        if(isset($_POST['username']) && isset($_POST['password'])){
+            $usn = $_POST['username'];
+            $pwd = $_POST['password'];
+            $encpwd = md5($pwd);
 
-                }else if(empty($pwd)){
-                    
-                }else{
-                    echo 'Valid input';
+            $memberData = [
+                'username' => $usn,
+                'password' => $encpwd
+            ];
+
+            if(empty($usn)){
+                header("Location: login.php?error=Username cannot be empty");
+            }else if(empty($pwd)){
+                header("Location: login.php?error=Password cannot be empty");
+            }else{
+                $res = $member->checkLogin($memberData);
+                if($res->num_rows == 1){
+                    if($row = $res->fetch_assoc()){
+                        header("Location: memberhome.php?idmember=".$row['idmember']."login=success");
+
+                        exit();
+                    }
+                } else{
+                    header("Location: login.php?login=failed");
+                    exit();
                 }
             }
-        ?>
-        
+        }
+    ?>
+
     <div id="login-container">
         <div id="login">
-            <form action="">
+            <form action="login.php" method="post">
                 <h1>LOGIN</h1>
+                <?php
+                    if(isset($_GET['error'])){
+                        $psnerror = $_GET['error'];
+                        echo "<p class='error'>$psnerror</p>";
+
+                    }
+                    if(isset($_GET['register'])){
+                        $psn = $_GET['register'];
+                        echo "<p class='success'>$psn</p>";
+                    }
+                ?>
                 <label>Username</label>
                 <input type="text" name="username" placeholder="UserName">
 
                 <label>Password</label>
                 <input type="password" name="password" placeholder="Password">
 
-                <button type="submit">Login</button>
+                <input type="hidden" name="idmember">
+                <button type="submit">Login</button><br>
+
             </form>
+            <label id="regis">Don't have an account yet?<a href="register.php"> Register here</a></label>
+
         </div>
     </div>
    
