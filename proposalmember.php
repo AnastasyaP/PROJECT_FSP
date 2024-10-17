@@ -43,6 +43,28 @@ if(isset($_POST['btnSubmit'])){
 </head>
 <body>
 
+<section id="menu">
+        <div class="logo">
+            <img src="image/logo.png" alt="">
+            <h2>Grizz Team</h2>
+        </div>
+
+        <div class ="items">
+            <li><a href="memberhome.php">Dashboard</a></li>
+            <li><a href="team.php">Team</a></li>
+            <li><a href="game.php">Game</a></li>
+            <li><a href="event.php">Event</a></li>
+            <li><a href="achievement.php">Achievement</a></li>
+            <?php
+            $isMember = false; 
+
+            if ($isMember == 'true') {
+                echo '<li><a href="proposalmember.php">Join Proposal</a></li>';
+            }
+            ?>
+        </div>
+    </section>
+
     <div id="proposal-container">
         <div id="join">
             <form action="proposalmember.php" method="post">

@@ -23,8 +23,20 @@ $idmember = $_SESSION['idmember'];
 <body>
     <div id="detail-container">
     <h1>Your Proposal</h1>
+        <?php
+              if(isset($_GET['success'])){
+                $psn = $_GET['success'];
+                 echo "<p class='success'>$psn</p>";
+            }
+            if(isset($_GET['failed'])){
+                $psnerror = $_GET['failed'];
+                echo "<p class='error'>$psnerror</p>";
+            }
+        ?>
+        
         <div class="tableall">
             <?php
+
                 $res = $join->getProposalbymember($idmember);
                     echo "<table border = '1'>";
                     echo "<tr>
@@ -41,6 +53,7 @@ $idmember = $_SESSION['idmember'];
                         <td>".$row['team_name']."</td>
                         <td>".$row['description']."</td>
                         <td>".$row['status']."</td>
+                        <td><a href='deleteprop.php?idjoin_proposal=" . $row['idjoin_proposal'] . "'>DELETE</a></td>
                         </tr>";
                     }
                     echo"</table>";

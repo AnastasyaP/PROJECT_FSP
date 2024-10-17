@@ -104,5 +104,13 @@
             return $res;
         }
 
+        public function getDeleteProposal($idjoin){
+            $stmt = $this->mysqli->prepare("DELETE FROM join_proposal WHERE idjoin_proposal = ?");
+            $stmt->bind_param("i", $idjoin);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            return $stmt->affected_rows;
+        }
+
     }
 ?>
