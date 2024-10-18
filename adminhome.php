@@ -39,6 +39,12 @@
                 </div>
             </div>
 
+            <div class="login">
+                <form action="memberhome.php" method="post">
+                    <button class='login-button' type='submit' name='btnlogout' value='logout' id=btnprop>Log Out🔒</button>
+                </form>
+            </div>
+
             <div class="profile">
                 <i class="bi bi-person-circle"></i>
             </div>

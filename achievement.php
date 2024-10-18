@@ -1,3 +1,15 @@
+<?php
+    session_start();
+    $isMember = false;
+
+    require_once("achievementclass.php");
+    $achievement = new Achievement();
+
+    if(isset($_SESSION['idmember'])){
+        $idmember = $_SESSION['idmember'];
+        $isMember =true;
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,10 +19,6 @@
     <link rel ="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <?php
-        require_once("achievementclass.php");
-        $achievement = new Achievement();
-    ?>
     <section id="menu">
         <div class="logo">
             <img src="image/logo.png" alt="">
@@ -24,11 +32,9 @@
             <li><a href="event.php">Event</a></li>
             <li><a href="achievement.php">Achievement</a></li>
             <?php
-            $isMember = false; 
-
-            if ($isMember == 'true') {
-                echo '<li><a href="proposalmember.php">Join Proposal</a></li>';
-            }
+                if($isMember === true){
+                    echo '<li><a href="proposalmember.php">Join Proposal</a></li>';
+                }
             ?>
         </div>
     </section>

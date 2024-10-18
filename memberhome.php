@@ -1,3 +1,28 @@
+<?php
+    session_start();
+    $isMember = false;
+
+    require_once('teamclass.php');
+    $team = new Team();
+
+    if(isset($_POST['btnlogout'])){
+       $isMember = false;
+       session_destroy();
+       header("Location: memberhome.php");
+       exit();
+    }
+
+    if(isset($_SESSION['idmember'])){
+        $idmember = $_SESSION['idmember'];
+        $isMember =true;
+    }
+
+    $name = $_SESSION['name'] ?? 'Guest';
+
+    // if(isset($_SESSION['name'])){
+    // }
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,16 +32,6 @@
     <link rel ="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <?php
-     require_once('teamclass.php');
-     $team = new Team();
-     $isMember = false;
-
-     if(isset($_POST['btnlogout'])){
-        $isMember = false;
-     }
-    ?>
-    
     <section id="menu">
         <div class="logo">
             <img src="image/logo.png" alt="">
@@ -30,13 +45,8 @@
             <li><a href="event.php">Event</a></li>
             <li><a href="achievement.php">Achievement</a></li>
             <?php
-                if(isset($_GET['login'])){
-                    if($_GET['login']=='success'){
-                        $isMember = true;
-                        echo '<li><a href="proposalmember.php">Join Proposal</a></li>';
-                    } else{
-                        $isMember = false;
-                    }
+                if($isMember === true){
+                    echo '<li><a href="proposalmember.php">Join Proposal</a></li>';
                 }
             ?>
         </div>
@@ -56,10 +66,15 @@
             <div class="login">
                 <form action="login.php" method="post">
                     <?php
+
                         if($isMember === false){
                             echo "<button class='login-button' type='submit' name='btnlogin' value='login' id=btnprop>Log in🔐</button>";
                         }
-                        else if($isMember === true){
+                    ?>
+                </form>
+                <form action="memberhome.php" method="post">
+                    <?php
+                        if($isMember === true){
                             echo "<button class='login-button' type='submit' name='btnlogout' value='logout' id=btnprop>Log Out🔒</button>";
                         }
                     ?>
@@ -73,7 +88,7 @@
 
         <h3 class="i-name"> </h3>
         <div class="tableall">
-            <h1>Welcome To Grizz Team Website🎇</h1>
+            <?php echo "<h1>Welcome $name, To Grizz Team Website🎇</h1>"; ?>
         </div>
     </section>
 </body>

@@ -3,13 +3,20 @@ session_start();
 require_once("proposalclass.php");
 
 if(!isset($_SESSION['idmember'])){
-    header("Location:login.php");
+    header("Location: login.php");
     exit();
 }
 
 $join = new Proposal();
 
 $idmember = $_SESSION['idmember'];
+
+$isMember = false;
+
+if(isset($_POST['btnlogout'])){
+    session_destroy();
+   $isMember = false;
+}
 
 if(isset($_POST['btnSubmit'])){
     $team = $_POST['team'];
@@ -24,10 +31,10 @@ if(isset($_POST['btnSubmit'])){
     // $join->insertJoinProposal($joinData);
 
     if($join->insertJoinProposal($joinData)){
-        header("Location:proposalmember.php?success=Successfully do Join_proposal");
+        header("Location:proposalmember.php?success=Successfully do Join proposal");
         exit();
     }else{
-        header("Location:proposalmember.php?failed=Cannot do Join_proposal");
+        header("Location:proposalmember.php?failed=Cannot do Join proposal");
         exit();
     }
 }
@@ -43,7 +50,7 @@ if(isset($_POST['btnSubmit'])){
 </head>
 <body>
 
-<section id="menu">
+    <section id="menu">
         <div class="logo">
             <img src="image/logo.png" alt="">
             <h2>Grizz Team</h2>
@@ -56,49 +63,95 @@ if(isset($_POST['btnSubmit'])){
             <li><a href="event.php">Event</a></li>
             <li><a href="achievement.php">Achievement</a></li>
             <?php
-            $isMember = false; 
+                $isMember = false; 
 
-            if ($isMember == 'true') {
-                echo '<li><a href="proposalmember.php">Join Proposal</a></li>';
-            }
+                if(isset($idmember)){
+                    if($idmember){
+                        $isMember = true;
+                        echo '<li><a href="proposalmember.php">Join Proposal</a></li>';
+                    } else{
+                        $isMember = false;
+                    }
+                }
             ?>
         </div>
     </section>
 
-    <div id="proposal-container">
-        <div id="join">
-            <form action="proposalmember.php" method="post">
-            <h1>JOIN PROPOSAL</h1>
-                <?php
-            
-                     if(isset($_GET['success'])){
-                        $psn = $_GET['success'];
-                         echo "<p class='success'>$psn</p>";
-                    }
-                    if(isset($_GET['failed'])){
-                        $psnerror = $_GET['failed'];
-                        echo "<p class='error'>$psnerror</p>";
-                    }
-                ?>
-                <label for="team">Select Team : </label><br>
-                <select name="team" id="team">
-                    <option value="">Choose a Team</option>
+    <section id ="interface">
+        <div class="navigation">
+            <div class = "n1">
+                <div class="search">
+                <form action="insertachievement.php" method="get">
+                    <input type="text" name ="cari" placeholder="Search" value="<?php echo @$_GET["cari"]; ?>">
+                    <a class="reset-button" href="insertachievement.php">Reset</a> 
+                </form>
+                </div>
+            </div>
+
+            <div class="profile">
+                <i class="bi bi-person-circle"></i>
+            </div>
+        </div>
+        <h3 class="i-name"> Join Proposal😎 </h3>
+
+        <div class="tableall"> <!-- id="proposal-container" -->
+            <div> <!-- id="join" -->
+                <form action="proposalmember.php" method="post">
                     <?php
-                        $proposalData = $join->getTeam();
-                        
-                        while($row = $proposalData->fetch_assoc()){
-                            echo"<option value=".$row['idteam'].">".$row['name']."</option>";
+                        if(isset($_GET['success'])){
+                            $psn = $_GET['success'];
+                            echo "<p class='success'>$psn</p>";
+                        }
+                        if(isset($_GET['failed'])){
+                            $psnerror = $_GET['failed'];
+                            echo "<p class='error'>$psnerror</p>";
                         }
                     ?>
-                </select><br><br>
+                    <label for="team">Select Team : </label>
+                    <select name="team" id="team">
+                        <option value="">Choose a Team</option>
+                        <?php
+                            $proposalData = $join->getTeam();
+                            
+                            while($row = $proposalData->fetch_assoc()){
+                                echo"<option value=".$row['idteam'].">".$row['name']."</option>";
+                            }
+                        ?>
+                    </select><br><br>
 
-                <label for="description">Description</label><br>
-                <textarea name="description" id="description"></textarea><br><br>
+                    <label for="description">Description</label>
+                    <textarea name="description" id="description"></textarea><br><br>
 
-                <input type="submit" name="btnSubmit" value="submit"><br><br>
-            </form>
-            <label id=detail>You Wannay see your join Proposal?<a href="detailproposal.php"> Detail Proposalp</a></label>
+                    <input type="submit" name="btnSubmit" value="Submit"><br><br>
+                    <!-- <label id=detail>You Wanna see your join Proposal?<a href="detailproposal.php"> Detail Proposal</a></label> -->
+                </form>
+                <!-- detail join proposal -->
+                <?php
+                    $res = $join->getProposalbymember($idmember);
+                        echo "<table border = '1'>";
+                        echo "<tr>
+                            <th>Nama Member</th>
+                            <th>Nama Team </th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>";
+
+                        while($row = $res->fetch_assoc()){
+                            echo"<tr>
+                            <td>".$row['member_name']."</td>
+                            <td>".$row['team_name']."</td>
+                            <td>".$row['description']."</td>
+                            <td>".$row['status']."</td>
+                            <td><a href='deleteprop.php?idjoin_proposal=" . $row['idjoin_proposal'] . "'>DELETE</a></td>
+                            </tr>";
+                        }
+                        echo"</table>";
+                            
+                ?>
+            </div>
         </div>
-    </div>
+    </section>
+    
 </body>
 </html>

@@ -33,7 +33,9 @@
                     if($row = $res->fetch_assoc()){
                         if($row['profile']=='member'){
                             $_SESSION['idmember'] = $row['idmember'];
-                            header("Location: memberhome.php?idmember=".$row['idmember']."&login=success");
+                            $_SESSION['name'] = $row['name'];
+                            // header("Location: memberhome.php?idmember=".$_SESSION['idmember']."&login=success");
+                            header("Location: memberhome.php?login=success");
                             exit();
                         } else if($row['profile']=='admin'){
                             header("Location: adminhome.php?login=success");

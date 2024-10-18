@@ -55,16 +55,24 @@
 
         public function InsertTeamMembers($arrcol) {
             if (!empty($arrcol)) {
-                $stmt = $this->mysqli->prepare("INSERT INTO team_members(idmember, idteam, description) VALUES (?, ?, ?)");
-            
+                $checkStmt = $this->mysqli->prepare("SELECT * FROM team_members WHERE idmember = ? AND idteam = ?");
                 $idmember = $arrcol['idmember'];
                 $idteam = $arrcol['idteam'];
-                $description = $arrcol['description'];
-                
-                $stmt->bind_param("iis", $idmember, $idteam, $description);
-                $stmt->execute();
-                $stmt->close();
-                return true;
+        
+                $checkStmt->bind_param("ii", $idmember, $idteam);
+                $checkStmt->execute();
+                $result = $checkStmt->get_result();
+        
+                if ($result->num_rows == 0) {
+                    $stmt = $this->mysqli->prepare("INSERT INTO team_members(idmember, idteam, description) VALUES (?, ?, ?)");
+                    $description = $arrcol['description'];
+                    $stmt->bind_param("iis", $idmember, $idteam, $description);
+                    $stmt->execute();
+                    $stmt->close();
+                    return true;
+                } else {
+                    return "Member is already part of the team.";
+                }
             } else {
                 return false;
             }
@@ -95,7 +103,7 @@
                 "SELECT jp.*, concat(m.fname,' ',m.lname)as member_name,t.name as team_name,m.idmember,t.idteam 
                 from join_proposal as jp inner join member as m on jp.idmember = m.idmember
                 inner join team as t on jp.idteam = t.idteam
-                where jp.status = 'waiting' and m.idmember=?");
+                where m.idmember=?");
 
             $stmt->bind_param("i",$idmember);
 

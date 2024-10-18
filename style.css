@@ -11,7 +11,17 @@ body{
     background: #e5e7eb;
     display: flex;
     position: relative;
+
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
 }
+
+body, html {
+    overflow-x: hidden;
+}
+
 #menu {
     background:#0b1957;
     width: 300px;
@@ -277,17 +287,17 @@ form .success{
     margin: 20px auto;
 }
 
-#proposal-container {
+/* #proposal-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh; 
     width: 100%;
     position: relative;
-    background-color:  #0b1957;
-}
+    background-color:  #d7dbe6;
+} */
 
-#join select, #join textarea {
+/* #join select, #join textarea {
     width: 100%; 
     padding: 15px; 
     font-size: 18px; 
@@ -304,7 +314,7 @@ form .success{
 #join select {
     height: 50px; 
     background-color: #fff; 
-}
+} */
 
 form .failed{
     background: #F2DEDE;
@@ -315,11 +325,13 @@ form .failed{
     margin: 20px auto;
 }
 
-form #detail{
+/* form #detail{
     font-size: small;
     float: left;
     display: flex;
-}
+    background: #0b1957;
+    padding: 10px;
+} */
 
 #detail-container {
     display: flex;
@@ -328,5 +340,5 @@ form #detail{
     height: 100vh; 
     width: 100%;
     position: relative;
-    background-color:  lightblue;
+    background-color:  #0b1957;
 }
