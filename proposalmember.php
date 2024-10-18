@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once("proposalclass.php");
+require_once("eventclass.php");
+require_once("achievementclass.php");   
 
 if(!isset($_SESSION['idmember'])){
     header("Location: login.php");
@@ -8,6 +10,9 @@ if(!isset($_SESSION['idmember'])){
 }
 
 $join = new Proposal();
+$event = new Event();
+//$team = new Team();
+$achievement = new Achievement();
 
 $idmember = $_SESSION['idmember'];
 
@@ -146,8 +151,47 @@ if(isset($_POST['btnSubmit'])){
                             <td><a href='deleteprop.php?idjoin_proposal=" . $row['idjoin_proposal'] . "'>DELETE</a></td>
                             </tr>";
                         }
-                        echo"</table>";
-                            
+                        echo"</table><br><br>";       
+                ?>
+            
+                    <!--Event Data-->
+                 <h3> Your Team Event😎</h3><br>
+                <?php
+                    $resevent = $event->getEventByID($idmember);
+                    echo"<table border = '1'>";
+                    echo"<tr>
+                        <th>Event Name</th>
+                        <th>Event Date</th>
+                        <th>Description</th>
+                    </tr>";
+
+                    while($row = $resevent->fetch_assoc()){
+                        echo"<tr>
+                            <td>".$row['name']."</td>
+                            <td>".$row['date']."</td>
+                            <td>".$row['description']."</td>
+                        </tr>";
+                    }
+                    echo"</table><br><br>";  
+                ?>
+                 <h3> Your Team Achievement😎</h3><br>
+                <?php
+                    $resachievement = $achievement->getAchievementBymember($idmember);
+                    echo"<table border = '1'>";
+                    echo"<tr>
+                        <th>Achievement Name</th>
+                        <th>Achievement Date</th>
+                        <th>Description</th>
+                    </tr>";
+
+                    while($row = $resachievement->fetch_assoc()){
+                        echo"<tr>
+                            <td>".$row['name']."</td>
+                            <td>".$row['date']."</td>
+                            <td>".$row['description']."</td>
+                        </tr>";
+                    }
+                    echo"</table><br><br>";  
                 ?>
             </div>
         </div>

@@ -54,27 +54,20 @@
         }
 
         public function InsertTeamMembers($arrcol) {
-            if (!empty($arrcol)) {
-                $checkStmt = $this->mysqli->prepare("SELECT * FROM team_members WHERE idmember = ? AND idteam = ?");
-                $idmember = $arrcol['idmember'];
-                $idteam = $arrcol['idteam'];
+
+            $check = $this->mysqli->prepare("SELECT * FROM team_members WHERE idmember = ? and idteam = ?");
+            $check->bind_param("ii", $arrcol['idmember'],$arrcol['idteam']);
+            $check->execute();
+            $result = $check->get_result();
         
-                $checkStmt->bind_param("ii", $idmember, $idteam);
-                $checkStmt->execute();
-                $result = $checkStmt->get_result();
-        
-                if ($result->num_rows == 0) {
-                    $stmt = $this->mysqli->prepare("INSERT INTO team_members(idmember, idteam, description) VALUES (?, ?, ?)");
-                    $description = $arrcol['description'];
-                    $stmt->bind_param("iis", $idmember, $idteam, $description);
-                    $stmt->execute();
-                    $stmt->close();
-                    return true;
-                } else {
-                    return "Member is already part of the team.";
-                }
+            if ($result->num_rows == 0) {
+                $stmt = $this->mysqli->prepare("INSERT INTO team_members(idmember, idteam, description) VALUES (?, ?, ?)");
+                $stmt->bind_param("iis",$arrcol['idmember'],$arrcol['idteam'],$arrcol['description']);
+                $stmt->execute();
+                 $stmt->close();
+                return true;
             } else {
-                return false;
+                 return "Member is already part of the team.";
             }
         }
 

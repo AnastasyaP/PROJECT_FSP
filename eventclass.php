@@ -60,5 +60,19 @@
             return $stmt->affected_rows;
         }
 
+        public function getEventByID($idmember){
+            $stmt = $this->mysqli->prepare("SELECT e.name, e.date, e.description
+                                        from member m inner join team_members tm
+                                        on m.idmember = tm.idmember inner join team t
+                                        on tm.idteam = t.idteam inner join event_teams et
+                                        on t.idteam = et.idteam inner join event e
+                                        on e.idevent = et.idevent
+                                        where m.idmember = ?");
+            $stmt->bind_param("i",$idmember);
+            $stmt->execute();
+            $res= $stmt->get_result();
+            return $res;
+        }
+
     }
 ?>

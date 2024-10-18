@@ -15,8 +15,8 @@
     //echo "Affected rows: " . $affected_rows;
 
     if($affected_rows > 0){
-        header("Location: detailproposal.php?success=sucess to delete");
+        header("Location: proposalmember.php?success=Successfully cancel the join");
     } else {
-        header("Location:detailproposal.php?unsucess to delete");
+        header("Location:proposalmember.php?failed=failed to cancel the join");
     }
 ?>
