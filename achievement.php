@@ -82,7 +82,6 @@
                 if($res->num_rows > 0){
                     echo "<table border=1>
                     <tr>
-                        <th>ID</th>
                         <th>Team</th>
                         <th>Name</th>
                         <th>Date</th>
@@ -93,7 +92,6 @@
                         $formatrilis = strftime("%d %B %Y", strtotime($row['date']));
 
                         echo "<tr>
-                        <td>".$row['idachievement']."</td>
                         <td>".$row['teamname']."</td>
                         <td>".$row['achievename']."</td>
                         <td>".$formatrilis."</td>

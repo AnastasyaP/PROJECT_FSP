@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EDIT TEAM</title>
+    <link rel ="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
     <?php
         require_once('teamclass.php');
         $team = new Team();
         $id = $_GET["idteam"];
-    ?>
-    <?php
+
         if(isset($_POST['btnSubmit'])){
             $game = $_POST['game'];
             $name = $_POST['name'];
@@ -30,9 +30,7 @@
                 exit();
             }
         }
-    ?>
 
-    <?php
         if(isset($_GET['result'])){
             if($_GET['result']=='success'){
                 echo "Changes update successfully😆.<br><br><br>";
@@ -50,30 +48,64 @@
             exit();
         }
     ?>
-    <form action="editteam.php" method='post'>
-        <label for="name">Team Name: </label>
-        <input type="text" id="name" name="name" value="<?php echo $row['name']; ?>"><br><br>
+    <section id="menu">
+        <div class="logo">
+            <img src="image/logo.png" alt="">
+            <h2>Grizz Team</h2>
+        </div>
 
-        <label for="game">Game?</label><br>
-        <?php
-            $games = $team->getGame($id);
+        <div class ="items">
+            <li><a href="adminhome.php">Dashboard</a></li>
+            <li><a href="insertteam.php">Manage Team</a></li>
+            <li><a href="insertgamenew.php">Manage Game</a></li>
+            <li><a href="inserteventnew.php">Manage Event</a></li>
+            <li></i><a href="insertachievement.php">Manage Achievement</a></li>
+            <li><a href="joinproposaladmin.php">Join Proposal</a></li>
+        </div>
+    </section>
+    <section id="interface">
+        <div class="navigation">
+            <div class = "n1">
+                <div class="search">
+                <form action="adminhome.php" method="get">
+                    <input type="text" name ="cari" placeholder="Search" value="<?php echo @$_GET["cari"]; ?>">
+                    <a class="reset-button" href="adminhome.php">Reset</a> 
+                </form>
+                </div>
+            </div>
 
-            $currentGameId = $row['idgame'];
+            <div class="profile">
+                <i class="bi bi-person-circle"></i>
+            </div>
+        </div>
+        <h3 class="i-name"> Edit Team </h3>
+        <div class="tableall">
+            <form action="editteam.php" method='post'>
+                <label for="name">Team Name: </label>
+                <input type="text" id="name" name="name" value="<?php echo $row['name']; ?>"><br><br>
 
-            echo "<select name='game' id='game'>";
-            if ($games->num_rows > 0) {
-                while ($game = $games->fetch_assoc()) {
-                    $selected = ($game['idgame'] == $currentGameId) ? 'selected' : '';
-                    echo "<option value='{$game['idgame']}' $selected>{$game['name']}</option>";
-                }
-            } else {
-                echo "<option value=''>Tidak ada game tersedia</option>";
-            }
-            echo "</select>";
-        ?>
+                <label for="game">Game?</label><br>
+                <?php
+                    $games = $team->getGame($id);
 
-        <input type="hidden" name="idteam" value="<?php echo $row["idteam"]; ?>">
-        <input type="submit" value="Submit" name="btnSubmit">
-    </form>
+                    $currentGameId = $row['idgame'];
+
+                    echo "<select name='game' id='game'>";
+                    if ($games->num_rows > 0) {
+                        while ($game = $games->fetch_assoc()) {
+                            $selected = ($game['idgame'] == $currentGameId) ? 'selected' : '';
+                            echo "<option value='{$game['idgame']}' $selected>{$game['name']}</option>";
+                        }
+                    } else {
+                        echo "<option value=''>Tidak ada game tersedia</option>";
+                    }
+                    echo "</select>";
+                ?>
+
+                <input type="hidden" name="idteam" value="<?php echo $row["idteam"]; ?>">
+                <input type="submit" value="Submit" name="btnSubmit">
+            </form>
+        </div>
+    </section>
 </body>
 </html>

@@ -83,14 +83,12 @@
 
             echo "<table>";
             echo "<tr>
-                    <th>Team ID</th>
                     <th>Team Name</th>
                     <th>Game</th>
                 </tr>";
 
             while ($row = $res->fetch_assoc()) {
                 echo "<tr>
-                        <td>".$row['idteam']."</td>
                         <td>".$row['teamname']."</td>
                         <td>".$row['gamename']."</td>
                     </tr>";
@@ -99,18 +97,18 @@
 
             // paging tabel team
             echo "<div>Total Data ".$totaldata."</div>";
-            echo "<a href='memberhome.php?offset=0'>First</a> ";
+            echo "<a href='team.php?offset=0'>First</a> ";
 
             for($i = 1; $i <= $jmlhal; $i++) {
                 $off = ($i-1) * $perhal;
                 if($currhal == $i) {                
                     echo "<strong style='color:red'>$i</strong>";
                 } else {
-                    echo "<a href='memberhome.php?offset=".$off."'>".$i."</a> ";
+                    echo "<a href='team.php?offset=".$off."'>".$i."</a> ";
                 }
             }
             $lastoffset = ($jmlhal - 1) * $perhal;
-            echo "<a href='memberhome.php?offset=".$lastoffset."'>Last</a> ";
+            echo "<a href='team.php?offset=".$lastoffset."'>Last</a> ";
             ?>
         </div>
     </section>
