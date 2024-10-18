@@ -28,11 +28,13 @@
                 ];
     
                 $proposal->InsertTeamMembers($proposalData);
-                echo "Proposal approved!";
+                header("Location:joinproposaladmin.php");
+                exit();
             }
             elseif($action =='reject'){
                 $proposal-> UpdateStatusReject($idjoin);
-                echo "Proposal approved!";
+                header("Location:joinproposaladmin.php");
+                exit();
             }
         }
     ?>
@@ -108,24 +110,24 @@
                     </tr>";
     
                         while($row = $res->fetch_assoc()){
-                        echo"<form method='POST' action ='joinproposaladmin.php'>";
                         echo"<tr>
-                            <td>".$row['member_name']."</td>
-                            <td>".$row['team_name']."</td>
-                            <td>".$row['description']."</td>
-                            <td>".$row['status']."</td>
-                            <td>
-                                <input type='hidden' name='idjoin_proposal' value='" . $row['idjoin_proposal'] . "'>
-                                <input type='hidden' name='idmember' value='" . $row['idmember'] . "'>
-                                <input type='hidden' name='idteam' value='" . $row['idteam'] . "'>
-                                <input type='hidden' name='description' value='" . $row['description'] . "'>
-                                <button type='submit' name='action' value='approve' id=btnprop>Approve</button>
-                                <button type='submit' name='action' value='reject' id=btnprop>Reject</button>
-                            </td>
+                                <td>".$row['member_name']."</td>
+                                <td>".$row['team_name']."</td>
+                                <td>".$row['description']."</td>
+                                <td>".$row['status']."</td>
+                                <td>
+                                    <form method='POST' action ='joinproposaladmin.php'>
+                                    <input type='hidden' name='idjoin_proposal' value='" . $row['idjoin_proposal'] . "'>
+                                    <input type='hidden' name='idmember' value='" . $row['idmember'] . "'>
+                                    <input type='hidden' name='idteam' value='" . $row['idteam'] . "'>
+                                    <input type='hidden' name='description' value='" . $row['description'] . "'>
+                                    <button type='submit' name='action' value='approve' id=btnprop>Approve</button>
+                                    <button type='submit' name='action' value='reject' id=btnprop>Reject</button>
+                                    </form>
+                                </td>
                             </tr>" ;
                         }
                     echo"</table>";
-                    "</form>";
                 }
                 echo "<div>Total Data ".$totaldata."</div>";
                 echo "<a href='joinproposaladmin.php?offset=0'>First</a> ";
