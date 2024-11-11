@@ -2,21 +2,48 @@
     require_once("teamclass.php");
 
     if(isset($_POST['btnSubmit'])){
-        // extract($_POST);
-        $teamName = $_POST['name'];
-        $games = $_POST['game'];
+        if($_FILES['photo']['name']){
+            if(!$_FILES['photo']['error']){
+                $file_info = getimagesize($_FILES['photo']['tmp_name']);
+                if(empty($file_info)){
+                    $message = "The uploaded file doesn't seem to be an image.";
+                } else{
+                    if($_FILES['photo']['type'] == 'image/jpg' || $_FILES['photo']['type'] == 'image/jpeg'){
+                        $teamName = $_POST['name'];
+                        $games = $_POST['game'];
 
-        $team = new Team();
+                        $team = new Team();
 
-        foreach($games as $game){
-            $teamData = [
-                'idgame' => $game,
-                'name' => $teamName
-            ];
+                        foreach($games as $game){
+                            $teamData = [
+                                'idgame' => $game,
+                                'name' => $teamName
+                            ];
+                        }
+                        $idteam = $team->insertTeam($teamData);
+
+                        $target_dir = "image/";
+                        $imgFileType = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
+                        $newname = $target_dir . $idteam . "." . $imgFileType;
+
+                        if(move_uploaded_file($_FILES['photo']['tmp_name'], $newname)){
+                            $message = 'Congratulations! Your file was accepted.';
+                        } else {
+                            $message = 'File upload failed. Please check permissions and file path.';
+                        }
+
+                        header("Location: insertteam.php?result=success");
+                        exit();
+                    } else{
+                        $message = "Your file is not jpg!";
+                    }
+                }
+            } else{
+                $message = 'Ooops! Your upload triggered the following error: ' . $_FILES['photo']['error'];
+            }
+        } else{
+            $message = 'You did not select any file!'; 
         }
-
-        $team->insertTeam($teamData);
+        echo $message;
     }
-    header("Location: insertteam.php?result=success");
-    exit();
 ?>

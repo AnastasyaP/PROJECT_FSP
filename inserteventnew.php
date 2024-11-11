@@ -146,6 +146,7 @@
 
                 echo "<table border = '1'>";
                 echo "<tr>
+                        <th>ID</th>
                         <th>Nama event</th>
                         <th>Date </th>
                         <th>Description</th>
@@ -163,6 +164,7 @@
                     }
                     $team = implode(",",$team);
                     echo"<tr>
+                        <td>".$row['idevent']."</td>
                         <td>".$row['name']."</td>
                         <td>".$formatrilis."</td>
                         <td>".$row['description']."</td>

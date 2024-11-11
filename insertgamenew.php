@@ -110,12 +110,14 @@
 
                 echo "<table border = '1'>";
                 echo "<tr>
+                    <th>ID</th>
                     <th>Nama Game</th>
                     <th>Description</th>
                     <th colspan=2>Action</th>
                 </tr>";
                 while($row = $res->fetch_assoc()){
                 echo"<tr>
+                    <td>".$row['idgame']."</td>
                     <td>".$row['name']."</td>
                     <td>".$row['description']."</td>
                     <td><a href='editgame.php?idgame=".$row['idgame']."'>EDIT</a></td>

@@ -84,6 +84,12 @@
                 <label for="name">Team Name: </label>
                 <input type="text" id="name" name="name" value="<?php echo $row['name']; ?>"><br><br>
 
+                <?php
+                    // if()
+                ?>
+                <label>Edit Team Picture:</label>
+                <input type="file" name="photo" accept="image/jpeg, image/jpg" id="photo" value="<?php echo $row['idteam'].'.' ?>"><br><br>
+
                 <label for="game">Game?</label><br>
                 <?php
                     $games = $team->getGame($id);

@@ -59,9 +59,12 @@
             }
         ?>
         
-        <form action="insertteam_proses.php" method='post'>
+        <form action="insertteam_proses.php" method='post' enctype="multipart/form-data">
             <label for="name">Team Name: </label>
             <input type="text" id="name" name="name"><br><br>
+
+            <label>Upload Team Picture:</label>
+            <input type="file" name="photo" accept="image/jpeg, image/jpg" id="photo"><br><br>
 
             <label for="game">Game?</label><br>
             <?php
