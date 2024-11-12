@@ -138,7 +138,7 @@ if(isset($_POST['btnSubmit'])){
                     $currhal = 1;
             
                     if(isset($_GET['offset'])){
-                        $offset = intval($_GET['offset']);
+                        $offset= intval($_GET['offset']);
                         $currhal = ($offset/2+1);
                     } else{
                         $offset =0;
@@ -166,7 +166,7 @@ if(isset($_POST['btnSubmit'])){
                             <td>".$row['status']."</td>
                             <td>";
                             if($row['status']=='approved'){
-                                echo'<a href="proposalmember.php?idmember=' . $idmember . '">View Member</a>';
+                                echo '<a href="proposalmember.php?idmember=' . $idmember .  '&idteam=' . $row['idteam'] .'">View Member</a>';
                             }
                             elseif($row['status']=='rejected'){
                                 echo'<a href="deleteprop.php?idjoin_proposal=' . $row['idjoin_proposal'] . '">DELETE</a>';
@@ -190,15 +190,30 @@ if(isset($_POST['btnSubmit'])){
                                 echo "<a href='proposalmember.php?offset=".$off."'>".$i."</a> ";
                             }
                         }
-                        $lastoffset = ($jmlhal - 1) * $perhal;
+                        $lastoffset = ($jmlhal- 1) * $perhal;
                         echo "<a href='proposalmember.php?offset=".$lastoffset."'>Last</a><br><br>";
                 ?>
 
                 <h3> Your Team Member😎</h3><br>
                 <?php
-                if(isset($_GET['idmember'])){
+                if(isset($_GET['idmember']) && isset($_GET['idteam'])){
                     $idmemberUrl = $_GET['idmember'];
-                    $resmemberteam = $team->getMember($idmemberUrl);
+                    $idteam = $_GET['idteam'];
+
+                    $totaldatamem = 0;
+                    $perhalmem = 2;
+                    $currhalmem = 1;
+        
+                    if(isset($_GET['offsetmem'])){
+                        $offsetmem = intval($_GET['offsetmem']);
+                        $currhalmem = ($offsetmem/2+1);
+                    } else{
+                        $offsetmem =0;
+                    }
+                    $resmemberteam = $team->getMember($idmemberUrl,$idteam,$offsetmem,$perhal);
+                    $totaldatamem = $team->getTotalDatamemberTeam($idmemberUrl,$idteam);
+
+                    $jmlhalmem = ceil($totaldatamem/$perhalmem);
                     echo "<table border='1'>";
                     echo"<tr>
                         <th>Team Member</th>
@@ -212,14 +227,42 @@ if(isset($_POST['btnSubmit'])){
 
                         </tr>";
                     }
-                    echo"</table><br><br>";
+                    echo"</table>";
+                    echo "<div>Total Data ".$totaldatamem."</div>";
+                    echo "<a href='proposalmember.php?offset=0'>First</a> ";
+            
+                        for($i = 1; $i <= $jmlhalmem; $i++) {
+                            $offmem = ($i-1) * $perhal;
+                            if($currhalmem == $i) {                
+                                echo "<strong style='color:red'>$i</strong>";
+                            } else {
+                                echo "<a href='proposalmember.php?offset=".$offmem."'>".$i."</a> ";
+                            }
+                        }
+                    $lastoffsetmem = ($jmlhalmem- 1) * $perhalmem;
+                    echo "<a href='proposalmember.php?offsetmem=".$lastoffsetmem."'>Last</a><br><br>";
                 }
                 ?>
             
                     <!--Event Data-->
                  <h3> Your Team Event😎</h3><br>
                 <?php
-                    $resevent = $event->getEventByID($idmember);
+                    $totaldataevent = 0;
+                    $perhalevent= 2;
+                    $currhalevent = 1;
+
+                    if(isset($_GET['offsetevent'])){
+                        $offsetevent = intval($_GET['offsetevent']);
+                        $currhalevent = ($offsetevent/2+1);
+                    } else{
+                        $offsetevent =0;
+                    }
+            
+                    $resevent = $event->getEventByID($idmember,$offsetevent,$perhal);
+                    $totaldataevent= $event->getTotalDataEvent($idmember);
+
+                    $jmlhalevent = ceil($totaldataevent/$perhalevent);
+
                     echo"<table border = '1'>";
                     echo"<tr>
                         <th>Event Name</th>
@@ -234,11 +277,39 @@ if(isset($_POST['btnSubmit'])){
                             <td>".$row['description']."</td>
                         </tr>";
                     }
-                    echo"</table><br><br>";  
+                    echo"</table>";
+                    echo "<div>Total Data ".$totaldataevent."</div>";
+                        echo "<a href='proposalmember.php?offset=0'>First</a> ";
+            
+                        for($i = 1; $i <= $jmlhalevent; $i++) {
+                            $offevent = ($i-1) * $perhalevent;
+                            if($currhalevent== $i) {                
+                                echo "<strong style='color:red'>$i</strong>";
+                            } else {
+                                echo "<a href='proposalmember.php?offset=".$offevent."'>".$i."</a> ";
+                            }
+                        }
+                        $lastoffsetevent = ($jmlhalevent - 1) * $perhalevent;
+                        echo "<a href='proposalmember.php?offsetevent=".$lastoffsetevent."'>Last</a><br><br>";  
                 ?>
                  <h3> Your Team Achievement😎</h3><br>
                 <?php
-                    $resachievement = $achievement->getAchievementBymember($idmember);
+                     $totaldataach = 0;
+                     $perhalach = 2;
+                     $currhalach = 1;
+ 
+                    if(isset($_GET['offsetach'])){
+                        $offsetach= intval($_GET['offsetach']);
+                        $currhalach = ($offsetach/2+1);
+                    } else{
+                        $offsetach =0;
+                    }
+
+                    $resachievement = $achievement->getAchievementBymember($idmember,$offsetach,$perhal);
+                    $totaldataach = $achievement->getTotalDataAchievement($idmember);
+
+                    $jmlhalach = ceil($totaldataach/$perhalach);
+
                     echo"<table border = '1'>";
                     echo"<tr>
                         <th>Achievement Name</th>
@@ -253,7 +324,20 @@ if(isset($_POST['btnSubmit'])){
                             <td>".$row['description']."</td>
                         </tr>";
                     }
-                    echo"</table><br><br>";  
+                    echo"</table>";
+                    echo "<div>Total Data ".$totaldataach."</div>";
+                        echo "<a href='proposalmember.php?offset=0'>First</a> ";
+            
+                        for($i = 1; $i <= $jmlhalach;$i++) {
+                            $offach = ($i-1) * $perhal;
+                            if($currhalach == $i) {                
+                                echo "<strong style='color:red'>$i</strong>";
+                            } else {
+                                echo "<a href='proposalmember.php?offsetach=".$offach."'>".$i."</a> ";
+                            }
+                        }
+                    $lastoffsetach= ($jmlhalach - 1) * $perhalach;
+                    echo "<a href='proposalmember.php?offset=".$lastoffsetach."'>Last</a><br><br>";    
                 ?>
             </div>
         </div>

@@ -105,7 +105,7 @@
 
             if(!is_null($offset)){
                 $stmt->bind_param("iii", $idmember, $offset, $limit);
-            } else{
+            }else{
                 $stmt->bind_param("i", $idmember);
             }
             // $stmt->bind_param("i",$idmember);

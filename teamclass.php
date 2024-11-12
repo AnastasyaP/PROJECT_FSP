@@ -85,19 +85,35 @@
             return $res;
         }
 
-        public function getMember($idmember){
-            $stmt = $this->mysqli->prepare(
-                "SELECT concat(m.fname,'',m.lname)as memberName,t.name as teamName from
+        public function getMember($idmember,$idteam,$offset=null,$limit=null){
+            $sql ="SELECT concat(m.fname,'',m.lname)as memberName,t.name as teamName from
                 member as m inner join join_proposal as jn on
                 m.idmember = jn.idmember inner join team as t on t.idteam = jn.idteam
                 inner join team_members as tm on t.idteam = tm.idteam
-                where tm.idmember = ? and jn.status = 'approved'"
-            );
+                where tm.idmember = ? and jn.status = 'approved' and tm.idteam = ? ";
+                
+            if(!is_null($offset)){
+                $sql.= " LIMIT ?,?";
+            }
 
-            $stmt->bind_param("i",$idmember);
+            $stmt = $this->mysqli->prepare($sql);
+
+            if(!is_null($offset)){
+                $stmt->bind_param("iiii",$idmember,$idteam, $offset, $limit);
+            } else{
+                $stmt->bind_param("ii", $idmember,$idteam);
+            }
+            // $stmt->bind_param("i",$idmember);
+
             $stmt->execute();
-            $res=$stmt->get_result();
+            $res = $stmt->get_result();
             return $res;
+        }
+
+        public function getTotalDatamemberTeam($idmember,$idteam){
+            $res = $this->getMember($idmember,$idteam);
+            return $res->num_rows;
+
         }
     }
 ?>

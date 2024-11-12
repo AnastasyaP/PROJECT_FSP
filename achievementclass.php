@@ -79,17 +79,33 @@
             return $res;
         }
 
-        public function getAchievementBymember($idmember){
-            $stmt = $this->mysqli->prepare("SELECT a.name, a.date, a.description
+        public function getAchievementBymember($idmember,$offset=null, $limit = null){
+            $sql ="SELECT a.name, a.date, a.description
                                             from member m inner join team_members tm on m.idmember = tm.idmember
                                             inner join team t on tm.idteam = t.idteam
                                             inner join achievement a on t.idteam = a.idteam
-                                            where m.idmember = ?");
-            $stmt->bind_param("i",$idmember);
-            $stmt->execute();
-            $res=$stmt->get_result();
-            return $res;
+                                            where m.idmember = ?";
+            if(!is_null($offset)){
+                $sql.= " LIMIT ?,?";
+            }
 
+            $stmt = $this->mysqli->prepare($sql);
+
+            if(!is_null($offset)){
+                $stmt->bind_param("iii", $idmember, $offset, $limit);
+            } else{
+                $stmt->bind_param("i", $idmember);
+            }
+            // $stmt->bind_param("i",$idmember);
+
+            $stmt->execute();
+            $res = $stmt->get_result();
+            return $res;
+        }
+
+        public function getTotalDataAchievement($idmember){
+            $res = $this->getAchievementBymember($idmember);
+            return $res->num_rows;
         }
     }
 ?>
