@@ -10,24 +10,70 @@
     <?php
         require_once('teamclass.php');
         $team = new Team();
-        $id = $_GET["idteam"];
+
+        if(isset($_POST['idteam'])){
+            $id = $_POST["idteam"];
+        }
 
         if(isset($_POST['btnSubmit'])){
-            $game = $_POST['game'];
-            $name = $_POST['name'];
-            $idteam = $_POST['idteam'];
+            if(isset($_FILES['photo']) && ($_FILES['photo']['name'])){
+                if(!$_FILES['photo']['error']){
+                    $file_info = getimagesize($_FILES['photo']['tmp_name']);
+                    if(empty($file_info)){
+                        $message = "The uploaded file doesn't seem to be an image.";
+                    } else{
+                        $imgFileType = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
+                        
+                        if($imgFileType === 'jpg'){
+                            $teamName = $_POST['name'];
+                            $games = $_POST['game'];
+    
+                            $oldPict = "image/{$id}.jpg";
+                            if (file_exists($oldPict)) {
+                                unlink($oldPict); // Hapus file gambar lama
+                            }
 
-            $teamData = [
-                'idgame' => $game,
-                'name' => $name 
-            ];
+                            $target_dir = "image/";
+                            $newname = $target_dir . $id . "." . $imgFileType;
+    
+                            if(move_uploaded_file($_FILES['photo']['tmp_name'], $newname)){
+    
+                                foreach($games as $game){
+                                    $teamData = [
+                                        'idgame' => $game,
+                                        'name' => $teamName
+                                    ];
+                                }
 
-            if($team->updateTeam($teamData, $idteam)){
-                header("Location: adminhome.php?idteam=$idteam&result=success");
-                exit();
+                                $game = $_POST['game'];
+                                $name = $_POST['name'];
+                    
+                                $teamData = [
+                                    'idgame' => $game,
+                                    'name' => $name 
+                                ];
+
+                                // $message = 'Congratulations! Your file was accepted.';
+                    
+                                if($team->updateTeam($teamData, $id)){
+                                    header("Location: adminhome.php?idteam=$id&result=success");
+                                    exit();
+                                } else{
+                                    header("Location: adminhome.php?idteam=$id&result=failed");
+                                    exit();
+                                }
+                            } else {
+                                $message = 'File upload failed. Please check permissions and file path.';
+                            }
+                        } else{
+                            $message = "Your file is not jpg!";
+                        }
+                    }
+                } else{
+                    $message = 'Ooops! Your upload triggered the following error: ' . $_FILES['photo']['error'];
+                }
             } else{
-                header("Location: adminhome.php?idteam=$idteam&result=failed");
-                exit();
+                $message = 'You did not select any file!'; 
             }
         }
 
@@ -39,12 +85,14 @@
             }
         }
 
+
+        // ini buat ngambil id dari form sebelumnya dan menampilkan data2 dari form sebelumnya
         if (isset($_GET['idteam'])) {
             
-            $nameData = $team->getTeam($id);
+            $nameData = $team->getTeam($_GET['idteam']);
             $row = $nameData->fetch_assoc();
         } else {
-            echo "ID event tidak ditemukan.";
+            echo "ID team tidak ditemukan.";
             exit();
         }
     ?>
@@ -80,19 +128,16 @@
         </div>
         <h3 class="i-name"> Edit Team </h3>
         <div class="tableall">
-            <form action="editteam.php" method='post'>
+            <form action="editteam.php" method='post' enctype="multipart/form-data">
                 <label for="name">Team Name: </label>
                 <input type="text" id="name" name="name" value="<?php echo $row['name']; ?>"><br><br>
 
-                <?php
-                    // if()
-                ?>
                 <label>Edit Team Picture:</label>
-                <input type="file" name="photo" accept="image/jpeg, image/jpg" id="photo" value="<?php echo $row['idteam'].'.' ?>"><br><br>
+                <input type="file" name="photo" accept="image/jpg" id="photo"><br><br>
 
                 <label for="game">Game?</label><br>
                 <?php
-                    $games = $team->getGame($id);
+                    $games = $team->getGame($_GET['idteam']);
 
                     $currentGameId = $row['idgame'];
 

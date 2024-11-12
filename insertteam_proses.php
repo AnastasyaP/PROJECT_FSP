@@ -8,7 +8,9 @@
                 if(empty($file_info)){
                     $message = "The uploaded file doesn't seem to be an image.";
                 } else{
-                    if($_FILES['photo']['type'] == 'image/jpg' || $_FILES['photo']['type'] == 'image/jpeg'){
+                    $imgFileType = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
+                    
+                    if($imgFileType === 'jpg'){
                         $teamName = $_POST['name'];
                         $games = $_POST['game'];
 
@@ -23,7 +25,6 @@
                         $idteam = $team->insertTeam($teamData);
 
                         $target_dir = "image/";
-                        $imgFileType = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
                         $newname = $target_dir . $idteam . "." . $imgFileType;
 
                         if(move_uploaded_file($_FILES['photo']['tmp_name'], $newname)){

@@ -85,6 +85,7 @@
 
             echo "<table>";
             echo "<tr>
+                    <th>Team Picture</th>
                     <th>Team ID</th>
                     <th>Team Name</th>
                     <th>Game</th>
@@ -92,7 +93,14 @@
                 </tr>";
 
             while ($row = $res->fetch_assoc()) {
+                $teamPict = $row["idteam"].".jpg";
+                if(!file_exists("image/".$teamPict)) {
+                    $teamPict = "blank.jpg";
+                }    
+
+                // function time() memaksa browser untuk selalu memuat gambar yang terbaru setiap kali halaman di-refresh, karena nilai time() selalu berubah.
                 echo "<tr>
+                        <td><img src='image/$teamPict? time()' alt='Team Picture' width=150></td> 
                         <td>".$row['idteam']."</td>
                         <td>".$row['teamname']."</td>
                         <td>".$row['gamename']."</td>

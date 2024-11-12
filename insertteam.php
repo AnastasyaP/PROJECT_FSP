@@ -64,7 +64,7 @@
             <input type="text" id="name" name="name"><br><br>
 
             <label>Upload Team Picture:</label>
-            <input type="file" name="photo" accept="image/jpeg, image/jpg" id="photo"><br><br>
+            <input type="file" name="photo" accept="image/jpg" id="photo"><br><br>
 
             <label for="game">Game?</label><br>
             <?php
