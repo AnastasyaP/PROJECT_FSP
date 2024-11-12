@@ -133,7 +133,22 @@ if(isset($_POST['btnSubmit'])){
                 </form>
                 <!-- detail join proposal -->
                 <?php
-                    $res = $join->getProposalbymember($idmember);
+                    $totaldata = 0;
+                    $perhal = 2;
+                    $currhal = 1;
+            
+                    if(isset($_GET['offset'])){
+                        $offset = intval($_GET['offset']);
+                        $currhal = ($offset/2+1);
+                    } else{
+                        $offset =0;
+                    }
+
+                    $res = $join->getProposalbymember($idmember, $offset, $perhal);
+                    $totaldata = $join->getTotalDataPropByMember($idmember);
+
+                    $jmlhal = ceil($totaldata/$perhal);
+
                         echo "<table border = '1'>";
                         echo "<tr>
                             <th>Nama Member</th>
@@ -163,7 +178,20 @@ if(isset($_POST['btnSubmit'])){
                             echo "</td>
                             </tr>";
                         }
-                        echo"</table><br><br>";       
+                        echo"</table>";       
+                        echo "<div>Total Data ".$totaldata."</div>";
+                        echo "<a href='proposalmember.php?offset=0'>First</a> ";
+            
+                        for($i = 1; $i <= $jmlhal; $i++) {
+                            $off = ($i-1) * $perhal;
+                            if($currhal == $i) {                
+                                echo "<strong style='color:red'>$i</strong>";
+                            } else {
+                                echo "<a href='proposalmember.php?offset=".$off."'>".$i."</a> ";
+                            }
+                        }
+                        $lastoffset = ($jmlhal - 1) * $perhal;
+                        echo "<a href='proposalmember.php?offset=".$lastoffset."'>Last</a><br><br>";
                 ?>
 
                 <h3> Your Team Member😎</h3><br>

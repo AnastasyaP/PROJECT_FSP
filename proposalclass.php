@@ -91,18 +91,33 @@
             
         }
 
-        public function getProposalbymember($idmember){
-            $stmt = $this->mysqli->prepare(
-                "SELECT jp.*, concat(m.fname,' ',m.lname)as member_name,t.name as team_name,m.idmember,t.idteam 
+        public function getProposalbymember($idmember, $offset=null, $limit=null){
+            $sql = "SELECT jp.*, concat(m.fname,' ',m.lname)as member_name,t.name as team_name,m.idmember,t.idteam 
                 from join_proposal as jp inner join member as m on jp.idmember = m.idmember
                 inner join team as t on jp.idteam = t.idteam
-                where m.idmember=?");
+                where m.idmember=?";
 
-            $stmt->bind_param("i",$idmember);
+            if(!is_null($offset)){
+                $sql.= " LIMIT ?,?";
+            }
+
+            $stmt = $this->mysqli->prepare($sql);
+
+            if(!is_null($offset)){
+                $stmt->bind_param("iii", $idmember, $offset, $limit);
+            } else{
+                $stmt->bind_param("i", $idmember);
+            }
+            // $stmt->bind_param("i",$idmember);
 
             $stmt->execute();
             $res = $stmt->get_result();
             return $res;
+        }
+
+        public function getTotalDataPropByMember($idmember){
+            $res = $this->getProposalbymember($idmember);
+            return $res->num_rows;
         }
 
         public function getDeleteProposal($idjoin){
