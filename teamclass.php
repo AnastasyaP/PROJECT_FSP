@@ -85,6 +85,19 @@
             return $res;
         }
 
-        
+        public function getMember($idmember){
+            $stmt = $this->mysqli->prepare(
+                "SELECT concat(m.fname,'',m.lname)as memberName,t.name as teamName from
+                member as m inner join join_proposal as jn on
+                m.idmember = jn.idmember inner join team as t on t.idteam = jn.idteam
+                inner join team_members as tm on t.idteam = tm.idteam
+                where tm.idmember = ? and jn.status = 'approved'"
+            );
+
+            $stmt->bind_param("i",$idmember);
+            $stmt->execute();
+            $res=$stmt->get_result();
+            return $res;
+        }
     }
 ?>

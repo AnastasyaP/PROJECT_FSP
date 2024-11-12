@@ -2,7 +2,8 @@
 session_start();
 require_once("proposalclass.php");
 require_once("eventclass.php");
-require_once("achievementclass.php");   
+require_once("achievementclass.php");  
+require_once("teamclass.php"); 
 
 if(!isset($_SESSION['idmember'])){
     header("Location: login.php");
@@ -11,7 +12,7 @@ if(!isset($_SESSION['idmember'])){
 
 $join = new Proposal();
 $event = new Event();
-//$team = new Team();
+$team = new Team();
 $achievement = new Achievement();
 
 $idmember = $_SESSION['idmember'];
@@ -148,10 +149,43 @@ if(isset($_POST['btnSubmit'])){
                             <td>".$row['team_name']."</td>
                             <td>".$row['description']."</td>
                             <td>".$row['status']."</td>
-                            <td><a href='deleteprop.php?idjoin_proposal=" . $row['idjoin_proposal'] . "'>DELETE</a></td>
+                            <td>";
+                            if($row['status']=='approved'){
+                                echo'<a href="proposalmember.php?idmember=' . $idmember . '">View Member</a>';
+                            }
+                            elseif($row['status']=='rejected'){
+                                echo'<a href="deleteprop.php?idjoin_proposal=' . $row['idjoin_proposal'] . '">DELETE</a>';
+                            }
+                            else{
+                                echo 'Tidak Tersedia';
+                            }
+                                
+                            echo "</td>
                             </tr>";
                         }
                         echo"</table><br><br>";       
+                ?>
+
+                <h3> Your Team Member😎</h3><br>
+                <?php
+                if(isset($_GET['idmember'])){
+                    $idmemberUrl = $_GET['idmember'];
+                    $resmemberteam = $team->getMember($idmemberUrl);
+                    echo "<table border='1'>";
+                    echo"<tr>
+                        <th>Team Member</th>
+                        <th>Team Name</th>
+                    </tr>";
+
+                    while($row = $resmemberteam->fetch_assoc()){
+                        echo"<tr>
+                            <td>".$row['memberName']."</td>
+                            <td>".$row['teamName']."</td>
+
+                        </tr>";
+                    }
+                    echo"</table><br><br>";
+                }
                 ?>
             
                     <!--Event Data-->
@@ -196,6 +230,5 @@ if(isset($_POST['btnSubmit'])){
             </div>
         </div>
     </section>
-    
 </body>
 </html>
