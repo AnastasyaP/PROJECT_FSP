@@ -44,7 +44,7 @@
             <div class = "n1">
                 <div class="search">
                     <form action="game.php" method="get">
-                        <input type="text" name ="cari" placeholder="Search" value="<?php echo @$_GET["cari"]; ?>">
+                        <input type="text" name ="cari" placeholder="Search" id ="caridata" value="<?php echo @$_GET["cari"]; ?>">
                         <a class="reset-button" href="memberhome.php">Reset</a> 
                         </form>
                 </div>
@@ -60,7 +60,7 @@
         <div class="tableall">
             <?php
                 $totaldata = 0;
-                $perhal = 5;
+                $perhal = 3;
                 $currhal = 1;
         
                 if(isset($_GET['offset'])){
@@ -81,7 +81,7 @@
         
                 $jmlhal = ceil($totaldata/$perhal);
 
-                echo "<table border = '1'>";
+                echo "<table border = '1' id='tablegame'>";
                 echo "<tr>
                     <th>Nama Game</th>
                     <th>Description</th>
@@ -97,20 +97,36 @@
 
                 // paging tabel game
                 echo "<div>Total Data ".$totaldata."</div>";
-                echo "<a href='game.php?offset=0'>First</a> ";
+                // echo "<a href='game.php?offset=0'>First</a> ";
 
-                for($i = 1; $i <= $jmlhal; $i++) {
-                    $off = ($i-1) * $perhal;
-                    if($currhal == $i) {                
-                        echo "<strong style='color:red'>$i</strong>";
-                    } else {
-                        echo "<a href='game.php?offset=".$off."'>".$i."</a> ";
-                    }
-                }
-                $lastoffset = ($jmlhal - 1) * $perhal;
-                echo "<a href='game.php?offset=".$lastoffset."'>Last</a> ";
+                // for($i = 1; $i <= $jmlhal; $i++) {
+                //     $off = ($i-1) * $perhal;
+                //     if($currhal == $i) {                
+                //         echo "<strong style='color:red'>$i</strong>";
+                //     } else {
+                //         echo "<a href='game.php?offset=".$off."'>".$i."</a> ";
+                //     }
+                // }
+                // $lastoffset = ($jmlhal - 1) * $perhal;
+                // echo "<a href='game.php?offset=".$lastoffset."'>Last</a> ";
             ?>
+            <button type="button" id=loadmore>Load More</button>
         </div>
     </section>
 </body>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
+        crossorigin="anonymous"></script>
+    <script>
+        var offset = 0;
+        var perhalaman = 3;
+
+        $("body").on("click", "#loadmore",function(){
+            var cari = $("#caridata").val();
+            offset += perhalaman;
+            $.post("getgame.php",{offset:offset,cari:cari},function(data){
+                $("#tablegame").append(data);
+            });
+        });
+    </script>
 </html>
