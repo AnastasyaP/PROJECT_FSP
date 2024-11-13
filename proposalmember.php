@@ -279,14 +279,14 @@ if(isset($_POST['btnSubmit'])){
                     }
                     echo"</table>";
                     echo "<div>Total Data ".$totaldataevent."</div>";
-                        echo "<a href='proposalmember.php?offset=0'>First</a> ";
+                        echo "<a href='proposalmember.php?offsetevent=0'>First</a> ";
             
                         for($i = 1; $i <= $jmlhalevent; $i++) {
                             $offevent = ($i-1) * $perhalevent;
                             if($currhalevent== $i) {                
                                 echo "<strong style='color:red'>$i</strong>";
                             } else {
-                                echo "<a href='proposalmember.php?offset=".$offevent."'>".$i."</a> ";
+                                echo "<a href='proposalmember.php?offsetevent=".$offevent."'>".$i."</a> ";
                             }
                         }
                         $lastoffsetevent = ($jmlhalevent - 1) * $perhalevent;

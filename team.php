@@ -110,7 +110,7 @@
             // $lastoffset = ($jmlhal - 1) * $perhal;
             // echo "<a href='team.php?offset=".$lastoffset."'>Last</a> ";
             ?>
-            <button type="button" id=loadmore>Load More</button>
+            <button type="button" class="load" id="loadmore">Load More</button>
         </div>
     </section>
 </body>
