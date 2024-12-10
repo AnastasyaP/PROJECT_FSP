@@ -149,6 +149,8 @@ if(isset($_POST['btnSubmit'])){
                         $offset =0;
                     }
 
+                    echo "<h3> Your Proposal 😎</h3><br>";
+
                     $res = $join->getProposalbymember($idmember, $offset, $perhal);
                     $totaldata = $join->getTotalDataPropByMember($idmember);
 
@@ -177,7 +179,7 @@ if(isset($_POST['btnSubmit'])){
                                 echo'<a href="deleteprop.php?idjoin_proposal=' . $row['idjoin_proposal'] . '">DELETE</a>';
                             }
                             else{
-                                echo 'Tidak Tersedia';
+                                echo 'Not Available';
                             }
                                 
                             echo "</td>
