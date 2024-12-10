@@ -58,9 +58,9 @@
         <h3 class="i-name"> Our Team💖 </h3>
 
         <div class="tableall">
-        <?php 
+            <?php 
             $totaldata = 0;
-            $perhal = 2;
+            $perhal = 5;
             $currhal = 1;
     
             if(isset($_GET['offset'])){
@@ -83,12 +83,19 @@
 
             echo "<table border = '1', id='tableteam'>";
             echo "<tr>
+                    <th>Team Picture</th>
                     <th>Team Name</th>
                     <th>Game</th>
                 </tr>";
 
             while ($row = $res->fetch_assoc()) {
+                $teamPict = $row["idteam"].".jpg";
+                if(!file_exists("image/".$teamPict)) {
+                    $teamPict = "blank.jpg";
+                }    
+
                 echo "<tr>
+                        <td><img src='image/$teamPict' alt='Team Picture' width=150></td>
                         <td>".$row['teamname']."</td>
                         <td>".$row['gamename']."</td>
                     </tr>";
@@ -97,24 +104,24 @@
 
             // paging tabel team
             echo "<div>Total Data ".$totaldata."</div>";
-            // echo "<a href='team.php?offset=0'>First</a> ";
+            echo "<a href='team.php?offset=0'>First</a> ";
 
-            // for($i = 1; $i <= $jmlhal; $i++) {
-            //     $off = ($i-1) * $perhal;
-            //     if($currhal == $i) {                
-            //         echo "<strong style='color:red'>$i</strong>";
-            //     } else {
-            //         echo "<a href='team.php?offset=".$off."'>".$i."</a> ";
-            //     }
-            // }
-            // $lastoffset = ($jmlhal - 1) * $perhal;
-            // echo "<a href='team.php?offset=".$lastoffset."'>Last</a> ";
+            for($i = 1; $i <= $jmlhal; $i++) {
+                $off = ($i-1) * $perhal;
+                if($currhal == $i) {                
+                    echo "<strong style='color:red'>$i</strong>";
+                } else {
+                    echo "<a href='team.php?offset=".$off."'>".$i."</a> ";
+                }
+            }
+            $lastoffset = ($jmlhal - 1) * $perhal;
+            echo "<a href='team.php?offset=".$lastoffset."'>Last</a> ";
             ?>
-            <button type="button" class="load" id="loadmore">Load More</button>
+            <!-- <button type="button" class="load" id="loadmore">Load More</button> -->
         </div>
     </section>
 </body>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
+    <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
         crossorigin="anonymous"></script>
     <script>
@@ -128,5 +135,5 @@
                 $("#tableteam").append(data);
             });
         });
-    </script>
+    </script> -->
 </html>

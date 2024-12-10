@@ -85,8 +85,8 @@
 
             echo "<table>";
             echo "<tr>
-                    <th>Team Picture</th>
                     <th>Team ID</th>
+                    <th>Team Picture</th>
                     <th>Team Name</th>
                     <th>Game</th>
                     <th colspan=2>Action</th>
@@ -100,8 +100,8 @@
 
                 // function time() memaksa browser untuk selalu memuat gambar yang terbaru setiap kali halaman di-refresh, karena nilai time() selalu berubah.
                 echo "<tr>
-                        <td><img src='image/$teamPict?".time()."' alt='Team Picture' width=150></td> 
                         <td>".$row['idteam']."</td>
+                        <td><img src='image/$teamPict?".time()."' alt='Team Picture' width=150></td> 
                         <td>".$row['teamname']."</td>
                         <td>".$row['gamename']."</td>
                         <td><a href='editteam.php?idteam=".$row['idteam']."'>EDIT</a></td>

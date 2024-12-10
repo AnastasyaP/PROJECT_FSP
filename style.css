@@ -116,6 +116,24 @@ body, html {
     opacity: .6;
 }
 
+#interface .tableall button .load {
+    display: inline-block;
+    padding: 6px 12px;
+    border: 1px solid #d7dbe6; 
+    border-radius: 5px; 
+    background-color: #0b1957; 
+    color: #fff;
+    text-decoration: none; 
+    font-size: 14px; 
+    margin-left: 10px; 
+    cursor: pointer; 
+    align-self: center; 
+}
+
+.load:hover{
+    opacity: .6;
+}
+
 #interface .navigation .profile{
     display: flex;
     justify-content: flex-start;

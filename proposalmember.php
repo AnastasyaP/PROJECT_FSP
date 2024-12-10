@@ -235,6 +235,7 @@ if(isset($_POST['btnSubmit'])){
                     }
                     echo"</table>";
                     echo '<a class="btn" href="proposalmember.php">Back</a>';
+                    
                     echo "<div>Total Data ".$totaldatamem."</div>";
                     echo "<a href='proposalmember.php?offset=0'>First</a> ";
             
@@ -278,9 +279,11 @@ if(isset($_POST['btnSubmit'])){
                     </tr>";
 
                     while($row = $resevent->fetch_assoc()){
+                        $formatevent = strftime("%d %B %Y", strtotime($row['date']));
+
                         echo"<tr>
                             <td>".$row['name']."</td>
-                            <td>".$row['date']."</td>
+                            <td>".$formatevent."</td>
                             <td>".$row['description']."</td>
                         </tr>";
                     }
@@ -325,9 +328,11 @@ if(isset($_POST['btnSubmit'])){
                     </tr>";
 
                     while($row = $resachievement->fetch_assoc()){
+                        $formatachieve = strftime("%d %B %Y", strtotime($row['date']));
+
                         echo"<tr>
                             <td>".$row['name']."</td>
-                            <td>".$row['date']."</td>
+                            <td>".$formatachieve."</td>
                             <td>".$row['description']."</td>
                         </tr>";
                     }
