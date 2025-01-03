@@ -17,6 +17,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel ="stylesheet" type="text/css" href="style.css">
+    <!-- <style>
+        .team-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Rata kiri */
+    gap: 20px; /* Jarak antar card */
+    width: 100%; /* Ambil lebar penuh */
+    padding: 20px;
+}
+
+.team-card {
+    flex: 1 1 200px; /* Minimal 200px */
+    max-width: 250px; /* Batas maksimal */
+}
+
+.team-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.team-container, .team-card, .team-image {
+    border: 1px solid red !important; /* Cek batas elemen */
+}
+
+.teamdetail-container {
+    padding: 15px;
+    text-align: center;
+}
+
+.team-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #0b1957;
+    margin-top: 10px;
+}
+
+.team-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+    </style> -->
 </head>
 <body>    
     <section id="menu">
@@ -56,21 +99,20 @@
         </div>
 
         <h3 class="i-name"> Our Team💖 </h3>
-
-        <div class="tableall">
-            <?php 
-            $totaldata = 0;
-            $perhal = 5;
-            $currhal = 1;
-    
+        <div class = "team-container">
+            <?php
+             $totaldata = 0;
+             $perhal = 3;
+             $currhal = 1;
+     
             if(isset($_GET['offset'])){
-                $offset = intval($_GET['offset']);
-                $currhal = ($offset/5+1);
+                 $offset = intval($_GET['offset']);
+                 $currhal = ($offset/$perhal+1);
             } else{
-                $offset =0;
+                 $offset =0;
+                 $currhal = 1;
             }
-    
-            // search name
+
             if(isset($_GET['cari'])){
                 $res = $team->readTeam($_GET['cari'], $offset, $perhal);
                 $totaldata = $team->getTotalData($_GET['cari']);
@@ -78,46 +120,47 @@
                 $res = $team->readTeam("", $offset, $perhal);
                 $totaldata = $team->getTotalData("");
             }
-    
-            $jmlhal = ceil($totaldata/$perhal);
+              while ($row = $res->fetch_assoc()) {
+                    $teamPict = $row["idteam"].".jpg";
+                    if(!file_exists("image/".$teamPict)) {
+                         $teamPict = "blank.jpg";
+                    }    
+                     
+                    echo "<div class ='team-card'>
+                            <img src='image/$teamPict?".time()."' alt='Team Picture' width=150 class='team-image'>
+                            <div class='teamdetail-container'>
+                                <h4 class='team-name'>" . htmlspecialchars($row['teamname']) ."</h4>
+                            </div>
 
-            echo "<table border = '1', id='tableteam'>";
-            echo "<tr>
-                    <th>Team Picture</th>
-                    <th>Team Name</th>
-                    <th>Game</th>
-                </tr>";
-
-            while ($row = $res->fetch_assoc()) {
-                $teamPict = $row["idteam"].".jpg";
-                if(!file_exists("image/".$teamPict)) {
-                    $teamPict = "blank.jpg";
-                }    
-
-                echo "<tr>
-                        <td><img src='image/$teamPict' alt='Team Picture' width=150></td>
-                        <td>".$row['teamname']."</td>
-                        <td>".$row['gamename']."</td>
-                    </tr>";
-            }
-            echo "</table>";
-
-            // paging tabel team
-            echo "<div>Total Data ".$totaldata."</div>";
-            echo "<a href='team.php?offset=0'>First</a> ";
-
-            for($i = 1; $i <= $jmlhal; $i++) {
-                $off = ($i-1) * $perhal;
-                if($currhal == $i) {                
-                    echo "<strong style='color:red'>$i</strong>";
-                } else {
-                    echo "<a href='team.php?offset=".$off."'>".$i."</a> ";
+                    </div>"; 
                 }
-            }
-            $lastoffset = ($jmlhal - 1) * $perhal;
-            echo "<a href='team.php?offset=".$lastoffset."'>Last</a> ";
             ?>
-            <!-- <button type="button" class="load" id="loadmore">Load More</button> -->
+        </div>
+
+        <div class="paging">
+            <?php
+                $jmlhal = ceil($totaldata / $perhal);
+                echo "<div id=total>Total Data: $totaldata</div>";
+
+                if ($currhal >= 1) {
+                    echo "<a href='team.php?offset=0'>First</a> ";
+                    $prevOffset = ($currhal - 2) * $perhal; // Offset halaman sebelumnya
+                }
+
+                for ($i = 1; $i <= $jmlhal; $i++) {
+                    $off = ($i - 1) * $perhal;
+                    if ($currhal == $i) {
+                        echo "<strong style='color:red;'>$i</strong> ";
+                    } else {
+                        echo "<a href='team.php?offset=$off'>$i</a> ";
+                    }
+                }
+
+                if ($currhal <= $jmlhal) {
+                    $lastoffset = ($jmlhal - 1) * $perhal;
+                    echo "<a href='team.php?offset=$lastoffset'>Last</a> ";
+                }
+            ?>
         </div>
     </section>
 </body>
