@@ -165,11 +165,15 @@ body, html {
     border-radius: 8px;
     margin-top: 30px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow-x:auto;
+    align-items: center;
+    justify-content: center;
 }
 
 .tableall table {
     width: 100%;
     border-collapse: collapse;
+    /* min-width: 600px; */
 }
 
 .tableall table, .tableall th, .tableall td {
@@ -448,6 +452,7 @@ form .failed{
 
 #loadmore{
     width: 100%;
+    margin: 0 auto;  
     padding: 15px;
     margin-top: 20px;
     background-color: #0b1957;
