@@ -6,56 +6,56 @@
             parent::__construct();
         }
 
-        // public function readTeam($keyword_name, $offset=null, $limit=null){
-        //     $sql = "SELECT t.idteam, t.name as teamname, t.idgame, g.name as gamename FROM team t INNER JOIN game g ON t.idgame = g.idgame WHERE t.name LIKE ?";
+        public function readTeam($keyword_name, $offset=null, $limit=null){
+            $sql = "SELECT t.idteam, t.name as teamname, t.idgame, g.name as gamename FROM team t INNER JOIN game g ON t.idgame = g.idgame WHERE t.name LIKE ?";
 
-        //     if(!is_null($offset)){
-        //         $sql.= " LIMIT ?,?";
-        //     }
-
-        //     //echo "SQL Query: " . $sql;
-
-        //     $stmt = $this->mysqli->prepare($sql);
-        //     $keyword = "%{$keyword_name}%";
-
-        //     //echo "Keyword: " . $keyword;
-
-        //     if(!is_null($offset)){
-        //         $stmt->bind_param("sii", $keyword, $offset, $limit);
-        //     } else{
-        //         $stmt->bind_param("s", $keyword);
-        //     }
-
-        //     $stmt->execute();
-        //     $result = $stmt->get_result();
-        //     return $result;
-        // }
-
-        public function readTeam($keyword_name, $offset = 0, $limit = 3){
-            $sql = "SELECT t.idteam, t.name AS teamname, t.idgame, g.name AS gamename 
-                    FROM team t 
-                    INNER JOIN game g ON t.idgame = g.idgame 
-                    WHERE t.name LIKE ?";
-            
-            $keyword = "%{$keyword_name}%";
-        
-            // Tambahkan LIMIT hanya jika $offset dan $limit valid
-            if ($offset !== null && $limit !== null) {
-                $sql .= " LIMIT ?, ?";
+            if(!is_null($offset)){
+                $sql.= " LIMIT ?,?";
             }
-        
+
+            //echo "SQL Query: " . $sql;
+
             $stmt = $this->mysqli->prepare($sql);
-            
-            if ($offset !== null && $limit !== null) {
+            $keyword = "%{$keyword_name}%";
+
+            //echo "Keyword: " . $keyword;
+
+            if(!is_null($offset)){
                 $stmt->bind_param("sii", $keyword, $offset, $limit);
-            } else {
+            } else{
                 $stmt->bind_param("s", $keyword);
             }
-        
+
             $stmt->execute();
             $result = $stmt->get_result();
             return $result;
         }
+
+        // public function readTeam($keyword_name, $offset = 0, $limit = 3){
+        //     $sql = "SELECT t.idteam, t.name AS teamname, t.idgame, g.name AS gamename 
+        //             FROM team t 
+        //             INNER JOIN game g ON t.idgame = g.idgame 
+        //             WHERE t.name LIKE ?";
+            
+        //     $keyword = "%{$keyword_name}%";
+        
+        //     // Tambahkan LIMIT hanya jika $offset dan $limit valid
+        //     if ($offset !== null && $limit !== null) {
+        //         $sql .= " LIMIT ?, ?";
+        //     }
+        
+        //     $stmt = $this->mysqli->prepare($sql);
+            
+        //     if ($offset !== null && $limit !== null) {
+        //         $stmt->bind_param("sii", $keyword, $offset, $limit);
+        //     } else {
+        //         $stmt->bind_param("s", $keyword);
+        //     }
+        
+        //     $stmt->execute();
+        //     $result = $stmt->get_result();
+        //     return $result;
+        // }
 
         public function getTotalData($keyword_name){
             $res = $this->readTeam($keyword_name);
