@@ -26,7 +26,7 @@
         </div>
 
         <div class ="items">
-            <li><a href="memberhome.php">Dashboard</a></li>
+            <li><a href="index.php">Dashboard</a></li>
             <li><a href="team.php">Team</a></li>
             <li><a href="game.php">Game</a></li>
             <li><a href="event.php">Event</a></li>
@@ -45,7 +45,7 @@
                 <div class="search">
                     <form action="game.php" method="get">
                         <input type="text" name ="cari" placeholder="Search" id ="caridata" value="<?php echo @$_GET["cari"]; ?>">
-                        <a class="reset-button" href="memberhome.php">Reset</a> 
+                        <a class="reset-button" href="index.php">Reset</a> 
                         </form>
                 </div>
             </div>

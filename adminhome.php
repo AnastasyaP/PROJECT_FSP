@@ -40,7 +40,7 @@
             </div>
 
             <div class="login">
-                <form action="memberhome.php" method="post">
+                <form action="index.php" method="post">
                     <button class='login-button' type='submit' name='btnlogout' value='logout' id=btnprop>Log Out🔒</button>
                 </form>
             </div>

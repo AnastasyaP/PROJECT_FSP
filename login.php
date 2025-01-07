@@ -34,15 +34,15 @@
                         if($row['profile']=='member'){
                             $_SESSION['idmember'] = $row['idmember'];
                             $_SESSION['name'] = $row['name'];
-                            // header("Location: memberhome.php?idmember=".$_SESSION['idmember']."&login=success");
-                            header("Location: memberhome.php?login=success");
+                            // header("Location: index.php?idmember=".$_SESSION['idmember']."&login=success");
+                            header("Location: index.php?login=success");
                             exit();
                         } else if($row['profile']=='admin'){
                             header("Location: adminhome.php?login=success");
                             exit();
                         }
 
-                       // header("Location: memberhome.php?idmember=".$row['idmember']."login=success");
+                       // header("Location: index.php?idmember=".$row['idmember']."login=success");
                         // header("Location: proposalmember.php");
                         // exit();
                     }

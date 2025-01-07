@@ -8,7 +8,7 @@
     if(isset($_POST['btnlogout'])){
        $isMember = false;
        session_destroy();
-       header("Location: memberhome.php");
+       header("Location: index.php");
        exit();
     }
 
@@ -18,9 +18,6 @@
     }
 
     $name = $_SESSION['name'] ?? 'Guest';
-
-    // if(isset($_SESSION['name'])){
-    // }
 
 ?>
 <!DOCTYPE html>
@@ -39,7 +36,7 @@
         </div>
 
         <div class ="items">
-            <li><a href="memberhome.php">Dashboard</a></li>
+            <li><a href="index.php">Dashboard</a></li>
             <li><a href="team.php">Team</a></li>
             <li><a href="game.php">Game</a></li>
             <li><a href="event.php">Event</a></li>
@@ -56,9 +53,9 @@
         <div class="navigation">
             <div class = "n1">
                 <div class="search">
-                    <form action="memberhome.php" method="get">
+                    <form action="index.php" method="get">
                         <input type="text" name ="cari" placeholder="Search"  value="<?php echo @$_GET["cari"]; ?>">
-                        <a class="reset-button" href="memberhome.php">Reset</a> 
+                        <a class="reset-button" href="index.php">Reset</a> 
                     </form>
                 </div>
             </div>
@@ -72,7 +69,7 @@
                         }
                     ?>
                 </form>
-                <form action="memberhome.php" method="post">
+                <form action="index.php" method="post">
                     <?php
                         if($isMember === true){
                             echo "<button class='login-button' type='submit' name='btnlogout' value='logout' id=btnprop>Log Out🔒</button>";

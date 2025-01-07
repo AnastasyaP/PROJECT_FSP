@@ -63,7 +63,7 @@ if(isset($_POST['btnSubmit'])){
         </div>
 
         <div class ="items">
-            <li><a href="memberhome.php">Dashboard</a></li>
+            <li><a href="index.php">Dashboard</a></li>
             <li><a href="team.php">Team</a></li>
             <li><a href="game.php">Game</a></li>
             <li><a href="event.php">Event</a></li>
