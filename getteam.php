@@ -2,21 +2,22 @@
 require_once('teamclass.php');
 $team = new Team();
 
-$offset = $_POST['offset'];
-$perhal = 2;
-$cari = $_POST['cari'];
-
-if(isset($_GET['cari'])){
-    $res = $team->readTeam($cari, $offset, $perhal);
-} else{
-    $res = $team->readTeam("", $offset, $perhal);
-    $totaldata = $team->getTotalData("");
-}
-
-while ($row = $res->fetch_assoc()) {
-    echo "<tr>
-            <td>".$row['teamname']."</td>
-            <td>".$row['gamename']."</td>
-        </tr>";
-}
+$offset = isset($_POST['offset']) ? intval($_POST['offset']) : 0;
+            $cari = isset($_POST['cari']) ? $_POST['cari'] : "";
+            $perhal = 3;
+            
+            $res = $team->readTeam($cari, $offset, $perhal);
+            
+            while ($row = $res->fetch_assoc()) {
+                $teamPict = $row["idteam"] . ".jpg";
+                if (!file_exists("image/" . $teamPict)) {
+                    $teamPict = "blank.jpg";
+                }
+                echo "<div class='team-card'>
+                        <img src='image/$teamPict?".time()."' alt='Team Picture' class='team-image'>
+                        <div class='teamdetail-container'>
+                            <h4 class='team-name'>" . htmlspecialchars($row['teamname']) . "</h4>
+                        </div>
+                      </div>";
+            }
 ?>

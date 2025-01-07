@@ -17,49 +17,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel ="stylesheet" type="text/css" href="style.css">
-    <!-- <style>
-        .team-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start; /* Rata kiri */
-    gap: 20px; /* Jarak antar card */
-    width: 100%; /* Ambil lebar penuh */
-    padding: 20px;
-}
-
-.team-card {
-    flex: 1 1 200px; /* Minimal 200px */
-    max-width: 250px; /* Batas maksimal */
-}
-
-.team-image {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-}
-
-.team-container, .team-card, .team-image {
-    border: 1px solid red !important; /* Cek batas elemen */
-}
-
-.teamdetail-container {
-    padding: 15px;
-    text-align: center;
-}
-
-.team-name {
-    font-size: 18px;
-    font-weight: bold;
-    color: #0b1957;
-    margin-top: 10px;
-}
-
-.team-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-    </style> -->
 </head>
 <body>    
     <section id="menu">
@@ -136,47 +93,30 @@
                 }
             ?>
         </div>
-
         <div class="paging">
-            <?php
-                $jmlhal = ceil($totaldata / $perhal);
-                echo "<div id=total>Total Data: $totaldata</div>";
-
-                if ($currhal >= 1) {
-                    echo "<a href='team.php?offset=0'>First</a> ";
-                    $prevOffset = ($currhal - 2) * $perhal; // Offset halaman sebelumnya
-                }
-
-                for ($i = 1; $i <= $jmlhal; $i++) {
-                    $off = ($i - 1) * $perhal;
-                    if ($currhal == $i) {
-                        echo "<strong style='color:red;'>$i</strong> ";
-                    } else {
-                        echo "<a href='team.php?offset=$off'>$i</a> ";
-                    }
-                }
-
-                if ($currhal <= $jmlhal) {
-                    $lastoffset = ($jmlhal - 1) * $perhal;
-                    echo "<a href='team.php?offset=$lastoffset'>Last</a> ";
-                }
-            ?>
+            <button type="button" id="loadmore">Load More</button>
         </div>
     </section>
 </body>
-    <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
         crossorigin="anonymous"></script>
     <script>
         var offset = 0
-        var perhalaman = 2;
+        var perhalaman = 3;
 
-        $("body").on("click",'#loadmore',function(){
+        $("body").on("click", '#loadmore', function () {
+            console.log("Load More button clicked");
+
             var cari = $("#caridata").val();
             offset += perhalaman;
-            $.post("getteam.php",{offset:offset,cari:cari},function(data){
-                $("#tableteam").append(data);
-            });
+
+            $.post("getteam.php", { offset: offset, cari: cari }, function (data) {
+                console.log("Data received: ", data);
+                $(".team-container").append(data);
+
+            })
         });
-    </script> -->
+
+    </script>
 </html>

@@ -461,6 +461,7 @@ form .failed{
     font-weight: bold;
 }
 
+
 #loadmore:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     transform: scale(1.02);
