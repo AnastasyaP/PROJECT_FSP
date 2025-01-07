@@ -92,7 +92,7 @@
             $nameData = $team->getTeam($_GET['idteam']);
             $row = $nameData->fetch_assoc();
         } else {
-            echo "ID team tidak ditemukan.";
+            echo "File must be .jpg";
             exit();
         }
     ?>
